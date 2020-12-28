@@ -1,50 +1,63 @@
 import requests
-from time import sleep
-
-URL = 'https://api.telegram.org/bot1377300202:AAHrZY0KokLcacdo_SriqiFLP6BIU5EyLFk/'
 
 
-# returns response of telegram's api
-def get_updates_by_json(request):
-    params = {'timeout': 100, 'offset': None}
-    response = requests.get(request + 'getUpdates', data=params).json()
-    return response
+# class Bot
+class Bot:
+
+    # class constructor
+    def __init__(self, token):
+        self.token = token
+        self.api_url = "https://api.telegram.org/bot{}/".format(token)
+
+    # returns chat updates
+    def get_updates(self, offset=None, timeout=30):
+        method = 'getUpdates'
+        params = {'timeout': timeout, 'offset': offset}
+        resp = requests.get(self.api_url + method, params)
+        result_json = resp.json()['result']
+        return result_json
+
+    # send message to chat
+    def send_message(self, chat_id, text):
+        params = {'chat_id': chat_id, 'text': text}
+        method = 'sendMessage'
+        resp = requests.get(self.api_url + method, params)
+        return resp
+
+    # returns last update of chat
+    def get_last_update(self):
+        get_result = self.get_updates()
+
+        if len(get_result) > 0:
+            last_update = get_result[-1]
+        else:
+            last_update = get_result[len(get_result)]
+
+        return last_update
 
 
-# returns data of last message in chat
-def last_update(data_get_updates_by_json):
-    results = data_get_updates_by_json['result']
-    total_updates = len(results) - 1
-    return results[total_updates]
-
-
-# returns chat_id of message in chat
-def get_chat_id(update):
-    chat_id = update['message']['chat']['id']
-    return chat_id
-
-
-# returns text of last message in chat
-def get_last_message(update):
-    last_message = update['message']['text']
-    return last_message
-
-
-# send message to chat
-def send_message(chat, text):
-    params = {'chat_id': chat, 'text': text}
-    response = requests.get(URL + 'sendMessage', data=params)
-    return response
+echo_bot = Bot('1377300202:AAHrZY0KokLcacdo_SriqiFLP6BIU5EyLFk')
 
 
 def main():
-    update_id = last_update(get_updates_by_json(URL))['update_id']
+    new_offset = None
+
     while True:
-        if update_id == last_update(get_updates_by_json(URL))['update_id']:
-            send_message(get_chat_id(last_update(get_updates_by_json(URL))), get_last_message(last_update(get_updates_by_json(URL))))
-            update_id += 1
-        sleep(1)
+        echo_bot.get_updates(new_offset)
+
+        last_update = echo_bot.get_last_update()
+
+        last_update_id = last_update['update_id']
+        last_chat_text = last_update['message']['text']
+        last_chat_id = last_update['message']['chat']['id']
+
+        echo_bot.send_message(last_chat_id, last_chat_text)
+
+        new_offset = last_update_id + 1
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit()
