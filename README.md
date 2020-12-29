@@ -1,4 +1,4 @@
-# Project Title
+# USHEDULE
 
 Ushedule - Telegram chatbot for students and teachers
 Shows the shedule
