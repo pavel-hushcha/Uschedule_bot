@@ -1,0 +1,13 @@
+certifi==2020.12.5
+chardet==4.0.0
+gunicorn==20.0.4
+idna==2.10
+numpy==1.19.4
+pathlib2==2.3.5
+Pillow==8.0.1
+requests==2.25.1
+RunSnakeRun==2.0.5
+six==1.15.0
+SquareMap==1.0.5
+urllib3==1.26.2
+wxPython==4.1.1

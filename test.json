@@ -1,0 +1,1 @@
+{'ok': True, 'result': [{'update_id': 328134958, 'message': {'message_id': 298, 'from': {'id': 180215934, 'is_bot': False, 'first_name': 'Pavel', 'username': 'paul_fastest', 'language_code': 'be'}, 'chat': {'id': 180215934, 'first_name': 'Pavel', 'username': 'paul_fastest', 'type': 'private'}, 'date': 1609689193, 'text': 'zdbf'}}]}

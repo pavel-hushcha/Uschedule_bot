@@ -7,7 +7,7 @@ class Bot:
     # class constructor
     def __init__(self, token):
         self.token = token
-        self.api_url = "https://api.telegram.org/bot{}/".format(token)
+        self.api_url = 'https://api.telegram.org/bot{}/'.format(token)
 
     # returns chat updates
     def get_updates(self, offset=None, timeout=30):
@@ -21,18 +21,16 @@ class Bot:
     def send_message(self, chat_id, text):
         params = {'chat_id': chat_id, 'text': text}
         method = 'sendMessage'
-        resp = requests.get(self.api_url + method, params)
+        resp = requests.post(self.api_url + method, params)
         return resp
 
     # returns last update of chat
     def get_last_update(self):
         get_result = self.get_updates()
-
         if len(get_result) > 0:
             last_update = get_result[-1]
         else:
             last_update = None
-
         return last_update
 
 
