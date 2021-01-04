@@ -22,7 +22,7 @@ class UsheduleBotTests(unittest.TestCase):
     def test_send_message(self):
         chat_id = self.bot.get_last_update()['message']['chat']['id']
         params = {'chat_id': chat_id, 'text': 'test'}
-        t = requests.post('https://api.telegram.org/bot1377300202:AAHrZY0KokLcacdo_SriqiFLP6BIU5EyLFk/' + 'sendMessage', params)
+        requests.post('https://api.telegram.org/bot1377300202:AAHrZY0KokLcacdo_SriqiFLP6BIU5EyLFk/' + 'sendMessage', params)
         self.assertEqual(self.bot.get_last_update()['message']['text'], 'test')
 
 
