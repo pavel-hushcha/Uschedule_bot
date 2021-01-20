@@ -1,5 +1,5 @@
 import unittest
-import main as test_app
+import src.Ushedule_bot.main as test_app
 import requests
 
 
@@ -15,7 +15,7 @@ class UsheduleBotTests(unittest.TestCase):
     def test_last_update(self):
         t = self.bot.get_updates()
         if len(t) == 0:
-            self.assertEqual(t, None)
+            self.assertEqual(t, [])
         else:
             self.assertIsInstance(t, list)
 

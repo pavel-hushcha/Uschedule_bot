@@ -1,6 +1,6 @@
-# USHEDULE
+# USCHEDULE
 
-Ushedule - Telegram chatbot for students and teachers
+Uschedule - Telegram chatbot for students and teachers
 Shows the shedule
 
 ## Getting Started
