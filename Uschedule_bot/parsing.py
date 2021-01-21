@@ -104,7 +104,9 @@ def make_schedule_for_teacher(teacher, semestr):
 def list_all(semestr):
     main_page = requests.get(semestr).text
     teachers = str(re.findall(r"var query = \[(.*)]", main_page))[2:-2]
-    cut_teachers = re.sub("'", "", teachers).split(",")
+    cut_teachers = []
+    for one in re.sub("'", "", teachers).split(","):
+        cut_teachers.append(one.rstrip())
     return cut_teachers
 
 
