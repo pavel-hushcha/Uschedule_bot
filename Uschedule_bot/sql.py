@@ -162,7 +162,10 @@ class Sql:
         search = cur.fetchone()
         return str(*search)
 
-
-# print(read_date("19МПП-1", "postgres://master:MYXLw67mJaI6XpAc4KEo@database-1.c9uxbai6ajvc.eu-central-1.rds.amazonaws.com:5432/uschedule"))
-# print(verification("180215934", "postgres://master:MYXLw67mJaI6XpAc4KEo@database-1.c9uxbai6ajvc.eu-central-1.rds.amazonaws.com:5432/uschedule"))
-# delete_table("user_position", "postgres://master:MYXLw67mJaI6XpAc4KEo@database-1.c9uxbai6ajvc.eu-central-1.rds.amazonaws.com:5432/uschedule")
+    def clear_getting_position(self, user_id):
+        con = psycopg2.connect(self.url)
+        cur = con.cursor()
+        cur.execute(f"DELETE FROM USER_POSITION WHERE USER_ID = ('{user_id}');")
+        con.commit()
+        cur.close()
+        con.close()

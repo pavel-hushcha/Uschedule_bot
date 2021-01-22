@@ -30,7 +30,7 @@ def make_schedule_for_teacher(teacher, semestr):
                 numbers_of_weeks.append(int(numbers) + 1)
         return numbers_of_weeks
 
-    # this function to transforming diction with lessons by days of week to diction with
+    # this function transforming dictionary with lessons by days of week to dictionary with
     # lessons by date
     def transform_to_days(massive):
         d_of_week = {"Понедельник": 0, "Вторник": 1, "Среда": 2, "Четверг": 3, "Пятница": 4, "Суббота": 5}
@@ -98,6 +98,22 @@ def make_schedule_for_teacher(teacher, semestr):
         transform_to_days(schedule_days)
     schedule_of_teacher = {teacher: days}
     return schedule_of_teacher
+
+
+def list_weeks(teacher, semestr):
+    params = {"f": None, "q": teacher}
+    weeks = {}  # dictionary view: {2: '08.02.-13.02.'}
+    check = BeautifulSoup(requests.get(semestr, params).text, "lxml").find("ul", id="weeks-menu")
+    if check:
+        ul_li = check.find_all("li")
+        for piece in ul_li:
+            week_number = re.findall(r"(\d+)\s", piece.text)  # cut week number
+            week_duration = re.findall(r"\((.*)\)", piece.text)  # cut week duration
+            if week_number:
+                weeks[int(week_number[0])] = week_duration[0]
+    else:
+        weeks = False
+    return weeks
 
 
 # this function parsing list of teachers and groups of students
