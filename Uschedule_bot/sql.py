@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import psycopg2
 
 
@@ -5,7 +7,7 @@ class Sql:
     def __init__(self, url):
         self.url = url
 
-    # this function insert in data base the table named by teacher or classroom with lessons
+    # insert in database the table named by teacher or classroom with lessons
     def insert_lessons_teacher(self, dict_teacher, date_ch):
         columns_teacher = ",".join(
             ["DATE_CH", "DATE", "TIME_LESSON", "LESSON", "CLASSROOM", "GROUPS"])  # column's names
@@ -29,7 +31,7 @@ class Sql:
         cur.close()
         con.close()
 
-    # this function insert in data base the table named by student's group with lessons
+    # insert in database the table named by student's group with lessons
     def insert_lessons_group(self, dict_group, date_ch):
         columns_group = ",".join(["DATE_CH", "DATE", "TIME_LESSON", "LESSON", "CLASSROOM", "GROUPS", "SUBGROUPS"])
         name = list(dict_group.keys())[0]  # name of table
@@ -53,7 +55,7 @@ class Sql:
         cur.close()
         con.close()
 
-    # this function read the teacher's lessons from sql:
+    # read the teacher's lessons from sql:
     # {'15-02-2021': [['8:30-10:05', 'Маркетинг  - лек.', '406', 'Рыбалко Юлия Александровна', '']]}
     def read_lessons_teacher(self, name_teacher):
         columns_reader = ", ".join(["DATE", "TIME_LESSON", "LESSON", "CLASSROOM", "GROUPS"])
@@ -68,7 +70,7 @@ class Sql:
         con.close()
         return sql_answer
 
-    # this function read the group's lessons from sql:
+    # read the group's lessons from sql:
     # {'15-02-2021': [['8:30-10:05', 'Маркетинг  - лек.', '406', 'Рыбалко Юлия Александровна', '']]}
     def read_lessons_group(self, name_group):
         columns_reader = ", ".join(["DATE", "TIME_LESSON", "LESSON", "CLASSROOM", "GROUPS", "SUBGROUPS"])
@@ -83,7 +85,7 @@ class Sql:
         con.close()
         return sql_answer
 
-    # this function deleting table from postgresql
+    # deleting table from database
     def delete_table(self, name_table):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
@@ -92,20 +94,17 @@ class Sql:
         cur.close()
         con.close()
 
-    # this function reading the date of changes in table of lessons
+    # reading the date of changes in table of lessons
     def read_date(self, name_table):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
-        try:
-            cur.execute(f"SELECT DATE_CH from \"{name_table}\";")
-        except Exception as err:
-            print("Oops! An exception has occured:", err)
-            print("Exception TYPE:", type(err))
+        cur.execute(f"SELECT DATE_CH from \"{name_table}\";")
         row = cur.fetchone()
         cur.close()
         con.close()
         return str(*row)
 
+    # check table if exists
     def check_table(self, name_table):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
@@ -115,6 +114,7 @@ class Sql:
         con.close()
         return exist
 
+    # create the empty table named by user_position
     def create_user_position(self):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
@@ -127,6 +127,7 @@ class Sql:
         cur.close()
         con.close()
 
+    # insert into user_position table telegram user_id
     def set_getting_position(self, user_id):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
@@ -136,6 +137,7 @@ class Sql:
         cur.close()
         con.close()
 
+    # insert into user_position table the name of group that wants to find the user
     def set_search_position(self, user_id, name_group):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
@@ -145,6 +147,7 @@ class Sql:
         cur.close()
         con.close()
 
+    # for the future functionality
     def set_weeks_position(self, user_id):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
@@ -154,6 +157,7 @@ class Sql:
         cur.close()
         con.close()
 
+    # get the telegram user_id
     def verification(self, user_id):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
@@ -162,6 +166,7 @@ class Sql:
         search = cur.fetchone()
         return str(*search)
 
+    # delete row with telegram user_id from user_position table
     def clear_getting_position(self, user_id):
         con = psycopg2.connect(self.url)
         cur = con.cursor()

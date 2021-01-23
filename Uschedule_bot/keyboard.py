@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import telebot
 
 
@@ -5,6 +7,7 @@ class Keyboard:
     def __init__(self, bot):
         self.bot = bot
 
+    # create the main menu
     def main_menu(self, message):
         user_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         user_keyboard.row("Ввести полное название группы / преподавателя / аудитории:",
@@ -13,6 +16,7 @@ class Keyboard:
                         "университете. Для вывода расписания вы должны сделать выбор:"
         self.bot.send_message(message.from_user.id, start_message, reply_markup=user_keyboard)
 
+    # create the menu for showing the schedule of lessons
     def schedule_menu(self, message):
         schedule_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         schedule_keyboard.row("Расписание на сегодняшний день")
@@ -22,6 +26,7 @@ class Keyboard:
         warningmsg = "Выберите период (может потребоваться ожидание до 20 секунд для вывода расписания):"
         self.bot.send_message(message.from_user.id, warningmsg, reply_markup=schedule_keyboard)
 
+    # create the menu with main menu and back buttons
     def main_back_menu(self, message):
         main_back_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         main_back_keyboard.row("Назад")

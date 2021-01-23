@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -5,14 +7,14 @@ from datetime import datetime
 from datetime import timedelta
 
 
-#  this function make dictionary of schedule of teacher or group of students
+#  make dictionary of schedule of teacher or group of students
 def make_schedule_for_teacher(teacher, semestr):
     # parsing html page with schedule;
     def pars_schedule(teach_group, sem):
         params = {"f": None, "q": teach_group}
         return BeautifulSoup(requests.get(sem, params).text, "lxml")
 
-    # this function for transform numbers of weeks in names of lessons to lists
+    # transform numbers of weeks in names of lessons to lists
     # '3-5, 8-14, 16-17' --> [3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 16, 17]
     def weeks_specify(weeks_from_lesson):
         numbers_of_weeks = []
@@ -30,7 +32,7 @@ def make_schedule_for_teacher(teacher, semestr):
                 numbers_of_weeks.append(int(numbers) + 1)
         return numbers_of_weeks
 
-    # this function transforming dictionary with lessons by days of week to dictionary with
+    # transforming dictionary with lessons by days of week to dictionary with
     # lessons by date
     def transform_to_days(massive):
         d_of_week = {"Понедельник": 0, "Вторник": 1, "Среда": 2, "Четверг": 3, "Пятница": 4, "Суббота": 5}
@@ -100,6 +102,7 @@ def make_schedule_for_teacher(teacher, semestr):
     return schedule_of_teacher
 
 
+# create the dictionary with numbers of weeks and its duration
 def list_weeks(teacher, semestr):
     params = {"f": None, "q": teacher}
     weeks = []  # dictionary view: {2: '08.02.-13.02.'}
@@ -116,7 +119,7 @@ def list_weeks(teacher, semestr):
     return weeks
 
 
-# this function parsing list of teachers and groups of students
+# parsing list of teachers and groups of students
 def list_all(semestr):
     main_page = requests.get(semestr).text
     teachers = str(re.findall(r"var query = \[(.*)]", main_page))[2:-2]
@@ -126,7 +129,7 @@ def list_all(semestr):
     return cut_teachers
 
 
-# this function returns list of student's groups
+# returns list of student's groups
 def list_groups(semestr):
     list_al = list_all(semestr)
     list_gr = []
@@ -136,7 +139,7 @@ def list_groups(semestr):
     return list_gr
 
 
-# this function returns list of teachers and classrooms
+# returns list of teachers and classrooms
 def list_teachers(semestr):
     list_al = list_all(semestr)
     list_gr = []
@@ -146,7 +149,7 @@ def list_teachers(semestr):
     return list_gr
 
 
-# this function parsing the date of last changes of schedule
+# parsing the date of last changes of schedule
 def pars_changes(semestr):
     for piece in BeautifulSoup(requests.get(semestr).text, "lxml"). \
             find("footer").find_all("p"):
