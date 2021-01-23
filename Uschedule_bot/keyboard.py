@@ -17,8 +17,7 @@ class Keyboard:
         schedule_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         schedule_keyboard.row("Расписание на сегодняшний день")
         schedule_keyboard.row("Расписание на завтрашний день")
-        schedule_keyboard.row("Расписание на текущую неделю")
-        schedule_keyboard.row("Расписание на следующую неделю")
+        schedule_keyboard.row("Расписание на неделю")
         schedule_keyboard.row("Главное меню")
         warningmsg = "Выберите период (может потребоваться ожидание до 20 секунд для вывода расписания):"
         self.bot.send_message(message.from_user.id, warningmsg, reply_markup=schedule_keyboard)
@@ -28,11 +27,5 @@ class Keyboard:
         main_back_keyboard.row("Назад")
         main_back_keyboard.row("Главное меню")
         self.bot.send_message(message.from_user.id, "Выберите пункт меню:", reply_markup=main_back_keyboard)
-
-    def search_menu(self, message):
-        find_message = "Введите, пожалуйста, полное название группы (например, 18ММТ-1), преподавателя " \
-                       "(например, Бучик Татьяна Александровна) или аудитории (например, 220):"
-        msgname = self.bot.send_message(message.from_user.id, find_message)
-        self.bot.register_next_step_handler(msgname, self.save_name_group)
 
 

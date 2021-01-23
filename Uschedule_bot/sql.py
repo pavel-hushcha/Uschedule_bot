@@ -145,10 +145,10 @@ class Sql:
         cur.close()
         con.close()
 
-    def set_day_position(self, user_id, day):
+    def set_weeks_position(self, user_id):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
-        cur.execute(f"UPDATE USER_POSITION SET SEARCH_POS = ('{day}') WHERE ID IN "
+        cur.execute(f"UPDATE USER_POSITION SET SEARCH_POS = ('1') WHERE ID IN "
                     f"(SELECT max(ID) FROM USER_POSITION WHERE USER_ID = ('{user_id}'));")
         con.commit()
         cur.close()

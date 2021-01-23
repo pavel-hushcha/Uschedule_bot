@@ -102,7 +102,7 @@ def make_schedule_for_teacher(teacher, semestr):
 
 def list_weeks(teacher, semestr):
     params = {"f": None, "q": teacher}
-    weeks = {}  # dictionary view: {2: '08.02.-13.02.'}
+    weeks = []  # dictionary view: {2: '08.02.-13.02.'}
     check = BeautifulSoup(requests.get(semestr, params).text, "lxml").find("ul", id="weeks-menu")
     if check:
         ul_li = check.find_all("li")
@@ -110,7 +110,7 @@ def list_weeks(teacher, semestr):
             week_number = re.findall(r"(\d+)\s", piece.text)  # cut week number
             week_duration = re.findall(r"\((.*)\)", piece.text)  # cut week duration
             if week_number:
-                weeks[int(week_number[0])] = week_duration[0]
+                weeks.append(week_duration[0])
     else:
         weeks = False
     return weeks
