@@ -130,7 +130,11 @@ def handle_text(message):
         today_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         today_keyboard.row("Назад")
         today_keyboard.row("Главное меню")
-        today_message = now + ":" + "\n\n" + display.display_schedule(name, now, lessons)
+        today_display = display.display_schedule(name, now, lessons)
+        if today_display:
+            today_message = now + ":" + "\n\n" + today_display
+        else:
+            today_message = now + ":" + "\n" + "Занятия отсутствуют."
         bot.send_message(message.chat.id, today_message, reply_markup=today_keyboard)
 
     if message.text == "Расписание на завтрашний день":
@@ -139,7 +143,11 @@ def handle_text(message):
         tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         tomorrow_keyboard.row("Назад")
         tomorrow_keyboard.row("Главное меню")
-        tomorrow_message = tomorrow + ":" + "\n\n" + display.display_schedule(name, tomorrow, lessons)
+        tomorrow_display = display.display_schedule(name, tomorrow, lessons)
+        if tomorrow_display:
+            tomorrow_message = tomorrow + ":" + "\n\n" + tomorrow_display
+        else:
+            tomorrow_message = tomorrow + ":" + "\n" + "Занятия отсутствуют."
         bot.send_message(message.chat.id, tomorrow_message, reply_markup=tomorrow_keyboard)
 
     if message.text == "Расписание на неделю":

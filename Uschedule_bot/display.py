@@ -57,6 +57,4 @@ def display_schedule(name, date, lessons):
             else:
                 displ_schedule += f"{part[0]} | {part[1]} | {part[2]} | {part[3]}"
                 displ_schedule += "\n"
-    # else:
-    #     displ_schedule += "Занятия отсутствуют."
     return displ_schedule
