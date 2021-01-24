@@ -177,7 +177,8 @@ def handle_query(call):
             dayz = datetime.datetime.strftime(monday + datetime.timedelta(days=day_schedule), "%d-%m-%Y")
             bot.send_message(call.message.chat.id, f"{days.get(day_schedule)} {dayz}:")
             display_day = display.display_schedule(name, dayz, lessons)
-            bot.send_message(call.message.chat.id, display_day)
+            if display_day:
+                bot.send_message(call.message.chat.id, display_day)
         bot.send_message(call.message.chat.id, "Выберите пункт меню:", reply_markup=back_keyboard)
 
 
