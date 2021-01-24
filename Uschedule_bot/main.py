@@ -129,8 +129,7 @@ def handle_text(message):
         today_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         today_keyboard.row("Назад")
         today_keyboard.row("Главное меню")
-        today_message = "Расписание на сегодня " + now + ":" + "\n\n" + \
-                        display.display_schedule(name, now, semestr)
+        today_message = now + ":" + "\n\n" + display.display_schedule(name, now, semestr)
         bot.send_message(message.chat.id, today_message, reply_markup=today_keyboard)
 
     if message.text == "Расписание на завтрашний день":
@@ -138,8 +137,7 @@ def handle_text(message):
         tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         tomorrow_keyboard.row("Назад")
         tomorrow_keyboard.row("Главное меню")
-        tomorrow_message = "Расписание на завтра " + tomorrow + ":" + "\n\n" + \
-                           display.display_schedule(name, tomorrow, semestr)
+        tomorrow_message = tomorrow + ":" + "\n\n" + display.display_schedule(name, tomorrow, semestr)
         bot.send_message(message.chat.id, tomorrow_message, reply_markup=tomorrow_keyboard)
 
     if message.text == "Расписание на неделю":
@@ -174,7 +172,7 @@ def handle_query(call):
         monday = datetime.datetime.strptime(call.data, "%d-%m-%Y")
         for day_schedule in range(0, 6):
             dayz = datetime.datetime.strftime(monday + datetime.timedelta(days=day_schedule), "%d-%m-%Y")
-            bot.send_message(call.message.chat.id, f"Расписание на {days.get(day_schedule)} {dayz}:")
+            bot.send_message(call.message.chat.id, f"{days.get(day_schedule)} {dayz}:")
             display_day = display.display_schedule(name, dayz, semestr)
             bot.send_message(call.message.chat.id, display_day)
         bot.send_message(call.message.chat.id, "Выберите пункт меню:", reply_markup=back_keyboard)
