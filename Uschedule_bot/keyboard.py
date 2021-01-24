@@ -11,7 +11,7 @@ class Keyboard:
     def main_menu(self, message):
         user_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         user_keyboard.row("Ввести полное название группы / преподавателя / аудитории:",
-                          "Поиск полного названия группы / преподавателя / аудитории:")
+                          "Поиск названия группы / преподавателя / аудитории:")
         start_message = "Вас приветствует бот показа расписания занятий в Полесском государственном " \
                         "университете. Для вывода расписания вы должны сделать выбор:"
         self.bot.send_message(message.from_user.id, start_message, reply_markup=user_keyboard)
@@ -23,7 +23,7 @@ class Keyboard:
         schedule_keyboard.row("Расписание на завтрашний день")
         schedule_keyboard.row("Расписание на неделю")
         schedule_keyboard.row("Главное меню")
-        warningmsg = "Выберите период (может потребоваться ожидание до 20 секунд для вывода расписания):"
+        warningmsg = "Выберите период:"
         self.bot.send_message(message.from_user.id, warningmsg, reply_markup=schedule_keyboard)
 
     # create the menu with main menu and back buttons
