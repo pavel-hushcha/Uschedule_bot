@@ -126,18 +126,20 @@ def handle_text(message):
     now = datetime.datetime.now().date().strftime("%d-%m-%Y")
 
     if message.text == "Расписание на сегодняшний день":
+        lessons = display.check_return_lessons(name, semestr)
         today_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         today_keyboard.row("Назад")
         today_keyboard.row("Главное меню")
-        today_message = now + ":" + "\n\n" + display.display_schedule(name, now, semestr)
+        today_message = now + ":" + "\n\n" + display.display_schedule(name, now, lessons)
         bot.send_message(message.chat.id, today_message, reply_markup=today_keyboard)
 
     if message.text == "Расписание на завтрашний день":
+        lessons = display.check_return_lessons(name, semestr)
         tomorrow = (datetime.date.today() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
         tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         tomorrow_keyboard.row("Назад")
         tomorrow_keyboard.row("Главное меню")
-        tomorrow_message = tomorrow + ":" + "\n\n" + display.display_schedule(name, tomorrow, semestr)
+        tomorrow_message = tomorrow + ":" + "\n\n" + display.display_schedule(name, tomorrow, lessons)
         bot.send_message(message.chat.id, tomorrow_message, reply_markup=tomorrow_keyboard)
 
     if message.text == "Расписание на неделю":
@@ -165,6 +167,7 @@ def handle_query(call):
             keyboard.schedule_menu(call)
     else:
         name = sql.verification(str(call.message.chat.id))
+        lessons = display.check_return_lessons(name, semestr)
         back_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
         back_keyboard.row("Назад")
         back_keyboard.row("Главное меню")
@@ -173,7 +176,7 @@ def handle_query(call):
         for day_schedule in range(0, 6):
             dayz = datetime.datetime.strftime(monday + datetime.timedelta(days=day_schedule), "%d-%m-%Y")
             bot.send_message(call.message.chat.id, f"{days.get(day_schedule)} {dayz}:")
-            display_day = display.display_schedule(name, dayz, semestr)
+            display_day = display.display_schedule(name, dayz, lessons)
             bot.send_message(call.message.chat.id, display_day)
         bot.send_message(call.message.chat.id, "Выберите пункт меню:", reply_markup=back_keyboard)
 
