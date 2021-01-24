@@ -191,7 +191,7 @@ def update_base():
                                            parsing.pars_changes(semestr))
 
 
-# scheduler of database updating at 4-00 AM
+# scheduler of database updating at 4-00 AM everyday
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_base, trigger="cron", hour=4, minute=0)
 try:
