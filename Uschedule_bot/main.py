@@ -71,14 +71,13 @@ def search_name_group(message):
     sample_name_group = message.text.lower()
     search_markup = telebot.types.InlineKeyboardMarkup()
     if len(sample_name_group) > 2:  # check for minimum 3 symbols searching
-        list_name_group = ""
+        list_name_group = 0
         list_teachers = parsing.list_all(semestr)
         for piece in list_teachers:
             if sample_name_group in piece.lower():  # create keyboard with found teachers
-                text_button = piece.replace("!", "")
                 search_markup.add(telebot.types.InlineKeyboardButton  # call == index of teacher in teacher's list
-                                  (text=text_button, callback_data=list_teachers.index(piece)))
-                list_name_group += piece
+                                  (text=piece, callback_data=str(list_teachers.index(piece))))
+                list_name_group += 1
         if list_name_group:
             bot.send_message(message.chat.id, "Результат поиска:", reply_markup=search_markup)
         else:
