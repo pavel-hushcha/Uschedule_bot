@@ -75,8 +75,9 @@ def search_name_group(message):
         list_teachers = parsing.list_all(semestr)
         for piece in list_teachers:
             if sample_name_group in piece.lower():  # create keyboard with found teachers
+                text_button = piece.replace("!", "")
                 search_markup.add(telebot.types.InlineKeyboardButton  # call == index of teacher in teacher's list
-                                  (text=piece.replace("!", ""), callback_data=list_teachers.index(piece)))
+                                  (text=text_button, callback_data=list_teachers.index(piece)))
                 list_name_group += piece
         if list_name_group:
             bot.send_message(message.chat.id, "Результат поиска:", reply_markup=search_markup)
