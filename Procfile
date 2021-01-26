@@ -1,1 +1,1 @@
-web: gunicorn Uschedule_bot/main:server
+web: gunicorn main:server
