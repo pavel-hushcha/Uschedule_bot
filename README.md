@@ -1,7 +1,7 @@
 # USCHEDULE
 
-Uschedule - Telegram chatbot for students and teachers
-Shows the shedule
+Uschedule - Telegram chatbot for students and teachers.
+Its showing the schedule of lessons in Polessky State University
 
 ## Getting Started
 
