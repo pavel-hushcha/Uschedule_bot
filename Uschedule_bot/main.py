@@ -33,6 +33,9 @@ keyboard = keyboard.Keyboard(bot)
 sql = sql.Sql(database_url)
 sql.create_user_position()
 
+bot.enable_save_next_step_handlers(delay=2)
+bot.load_next_step_handlers()
+
 
 # start message
 @bot.message_handler(commands=["start"])
@@ -191,10 +194,6 @@ def handle_query(call):
             if display_day:
                 bot.send_message(call.message.chat.id, display_day)
         bot.send_message(call.message.chat.id, "Выберите пункт меню:", reply_markup=back_keyboard)
-
-
-bot.enable_save_next_step_handlers(delay=2)
-bot.load_next_step_handlers()
 
 
 # everyday update the database
