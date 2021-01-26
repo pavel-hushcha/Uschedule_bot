@@ -1,1 +1,1 @@
-app: python Uschedule_bot/main.py
+web: gunicorn Uschedule_bot/main:server

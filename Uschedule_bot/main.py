@@ -9,6 +9,7 @@ import parsing
 import keyboard
 import display
 from apscheduler.schedulers.background import BackgroundScheduler
+from flask import Flask, request
 
 # get tokens from token file if it exist or from environment variables
 dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
@@ -21,6 +22,8 @@ if os.path.exists(dotenv_path):
 # variables
 token = os.environ.get("TOKEN")
 database_url = os.environ.get("DATABASE_URL")
+app_name = os.environ.get("APP_NAME")
+server = Flask(__name__)
 first_semestr = "https://www.polessu.by/ruz/cab/"
 second_semestr = "https://www.polessu.by/ruz/cab/term2/"
 semestr = second_semestr
@@ -211,5 +214,19 @@ try:
 except (KeyboardInterrupt, SystemExit):
     pass
 
+
+@server.route("/" + token, methods=["POST"])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utd-8"))])
+    return "POST", 200
+
+
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url=f"{app_name}herokuapp.com/{token}")
+    return "CONNECTED", 200
+
+
 if __name__ == '__main__':
-    bot.infinity_polling()
+    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

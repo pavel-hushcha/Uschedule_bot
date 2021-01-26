@@ -46,7 +46,7 @@ def make_schedule_for_teacher(teacher, semestr):
                 date = datetime.strptime(weeks.get(part)[:6], "%d.%m.") + timedelta(days=d_of_week.get(day))
                 cur_date = datetime.strftime(date, "%d-%m-") + str(year)
                 days.setdefault(cur_date, [])
-                days[cur_date].append(lesson)  # add lessons to diction by dates
+                days[cur_date].append(lesson)  # add lessons to dictionary by dates
 
     # finding block with the schedule in html page
     year = pars_changes(semestr).year
