@@ -12,3 +12,4 @@ soupsieve==2.1
 tzlocal==2.1
 urllib3==1.26.2
 flask==1.1.2
+gunicorn==20.0.4
