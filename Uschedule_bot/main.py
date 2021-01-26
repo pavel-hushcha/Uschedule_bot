@@ -81,7 +81,7 @@ def search_name_group(message):
                 search_markup.add(telebot.types.InlineKeyboardButton  # call == index of teacher in teacher's list
                                   (text=piece, callback_data=str(list_teachers.index(piece))))
                 list_name_group += 1
-        if list_name_group:
+        if list_name_group > 0:
             bot.send_message(message.chat.id, "Результат поиска:", reply_markup=search_markup)
         else:
             bot.send_message(message.chat.id, "Поиск не дал результатов, попробуйте уточнить критерии.")
