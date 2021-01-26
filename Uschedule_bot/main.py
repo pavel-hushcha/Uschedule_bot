@@ -33,9 +33,6 @@ keyboard = keyboard.Keyboard(bot)
 sql = sql.Sql(database_url)
 sql.create_user_position()
 
-bot.enable_save_next_step_handlers(delay=2)
-bot.load_next_step_handlers()
-
 
 # start message
 @bot.message_handler(commands=["start"])
@@ -66,8 +63,10 @@ def handle_text(message):
                      content_types=["text"])
 def handle_text(message):
     search_message = "Для поиска введите не менее 3 символов:"
-    msgname = bot.send_message(message.chat.id, search_message)
-    bot.register_next_step_handler(msgname, search_name_group)
+    # msgname = bot.send_message(message.chat.id, search_message)
+    bot.send_message(message.chat.id, "Для поиска введите не менее 3 символов:")
+    search_name_group(message)
+    # bot.register_next_step_handler(msgname, search_name_group)
 
 
 # search the name of group or teacher in the list of them
