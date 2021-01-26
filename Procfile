@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath Uschedule_bot main:server
+app: python Uschedule_bot/main.py

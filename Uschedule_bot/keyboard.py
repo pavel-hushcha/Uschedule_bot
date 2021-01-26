@@ -32,5 +32,3 @@ class Keyboard:
         main_back_keyboard.row("Назад")
         main_back_keyboard.row("Главное меню")
         self.bot.send_message(message.from_user.id, "Выберите пункт меню:", reply_markup=main_back_keyboard)
-
-
