@@ -193,28 +193,6 @@ def handle_query(call):
         bot.send_message(call.message.chat.id, "Выберите пункт меню:", reply_markup=back_keyboard)
 
 
-# everyday update the database
-def update_base():
-    for item in parsing.list_all(semestr):
-        if parsing.list_weeks(item, semestr):
-            sql.delete_table(item)
-            if re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
-                sql.insert_lessons_group(parsing.make_schedule_for_teacher(item, semestr),
-                                         parsing.pars_changes(semestr))
-            else:
-                sql.insert_lessons_teacher(parsing.make_schedule_for_teacher(item, semestr),
-                                           parsing.pars_changes(semestr))
-
-
-# scheduler of database updating at 4-00 AM everyday
-scheduler = BackgroundScheduler()
-scheduler.add_job(update_base, trigger="cron", hour=15, minute=0)
-try:
-    scheduler.start()
-except (KeyboardInterrupt, SystemExit):
-    pass
-
-
 @server.route("/" + token, methods=["POST"])
 def getMessage():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
@@ -228,5 +206,32 @@ def webhook():
     return "CONNECTED", 200
 
 
+bot.enable_save_next_step_handlers(delay=0.2)
+bot.load_next_step_handlers()
+
+
 if __name__ == "__main__":
     server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+
+# everyday update the database
+def update_base():
+    for item in parsing.list_all(semestr):
+        if parsing.list_weeks(item, semestr):
+            schedule = parsing.make_schedule_for_teacher(item, semestr)
+            d_ch = parsing.pars_changes(semestr)
+            sql.delete_table(item)
+            if re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
+                sql.insert_lessons_group(schedule, d_ch)
+            else:
+                sql.insert_lessons_teacher(schedule, d_ch)
+
+
+# scheduler of database updating at 18-00 AM everyday
+scheduler = BackgroundScheduler()
+scheduler.add_job(update_base, trigger="cron", hour=15, minute=0)
+try:
+    scheduler.start()
+except (KeyboardInterrupt, SystemExit):
+    pass
+
