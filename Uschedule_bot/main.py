@@ -193,6 +193,10 @@ def handle_query(call):
         bot.send_message(call.message.chat.id, "Выберите пункт меню:", reply_markup=back_keyboard)
 
 
+bot.enable_save_next_step_handlers(delay=2)
+bot.load_next_step_handlers()
+
+
 # everyday update the database
 def update_base():
     for item in parsing.list_all(semestr):
