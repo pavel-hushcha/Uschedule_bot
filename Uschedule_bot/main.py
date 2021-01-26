@@ -190,6 +190,9 @@ def handle_query(call):
         bot.send_message(call.message.chat.id, "Выберите пункт меню:", reply_markup=back_keyboard)
 
 
+bot.enable_save_next_step_handlers(delay=2)
+bot.load_next_step_handlers()
+
 if __name__ == '__main__':
     bot.infinity_polling()
 
