@@ -1,1 +1,1 @@
-web: gunicorn Uschedule_bot/main.py:server
+web: gunicorn Uschedule_bot/wsgi:server
