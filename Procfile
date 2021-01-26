@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath Uschedule_bot main:server
+web: gunicorn --pythonpath Uschedule_bot main:server 0.0.0.0:5000
