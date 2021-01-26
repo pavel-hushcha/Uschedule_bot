@@ -28,7 +28,7 @@ first_semestr = "https://www.polessu.by/ruz/cab/"
 second_semestr = "https://www.polessu.by/ruz/cab/term2/"
 semestr = second_semestr
 
-bot = telebot.TeleBot(token, threaded=False)
+bot = telebot.TeleBot(token)
 keyboard = keyboard.Keyboard(bot)
 sql = sql.Sql(database_url)
 sql.create_user_position()
