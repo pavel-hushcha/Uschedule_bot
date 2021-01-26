@@ -1,4 +1,4 @@
-from main import server
+from Uschedule_bot.main import server
 import os
 
 if __name__ == '__main__':

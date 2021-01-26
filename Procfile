@@ -1,1 +1,1 @@
-web: gunicorn Uschedule_bot/wsgi:server
+web: gunicorn wsgi:server
