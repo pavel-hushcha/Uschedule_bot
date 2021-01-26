@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath Uschedule_bot main:server --bind 0.0.0.0:${PORT}
+web: gunicorn --pythonpath Uschedule_bot main:server --bind 0.0.0.0:5000
