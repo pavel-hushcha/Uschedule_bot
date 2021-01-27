@@ -209,7 +209,7 @@ def update_base():
 
 
 # scheduler of database updating at 15-00 UTC AM everyday
-scheduler.add_job(update_base, trigger="cron", hour=18, minute=0)
+scheduler.add_job(update_base, trigger="cron", hour=15, minute=30)
 try:
     scheduler.start()
 except (KeyboardInterrupt, SystemExit):
