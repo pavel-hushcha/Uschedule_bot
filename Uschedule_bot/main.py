@@ -27,6 +27,7 @@ semestr = second_semestr
 
 bot = telebot.TeleBot(token)
 keyboard = keyboard.Keyboard(bot)
+scheduler = BackgroundScheduler()
 sql = sql.Sql(database_url)
 sql.create_user_position()
 
@@ -193,11 +194,8 @@ def handle_query(call):
 bot.enable_save_next_step_handlers(delay=2)
 bot.load_next_step_handlers()
 
-if __name__ == '__main__':
-    bot.infinity_polling()
 
-
-# everyday update the database
+# everyday updating the database
 def update_base():
     for item in parsing.list_all(semestr):
         if parsing.list_weeks(item, semestr):
@@ -211,9 +209,13 @@ def update_base():
 
 
 # scheduler of database updating at 15-00 UTC AM everyday
-scheduler = BackgroundScheduler()
-scheduler.add_job(update_base, trigger="cron", hour=15, minute=0)
+
+scheduler.add_job(update_base, trigger="cron", hour=18, minute=0)
 try:
     scheduler.start()
 except (KeyboardInterrupt, SystemExit):
     pass
+
+
+if __name__ == '__main__':
+    bot.infinity_polling()
