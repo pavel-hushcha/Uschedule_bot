@@ -209,7 +209,6 @@ def update_base():
 
 
 # scheduler of database updating at 15-00 UTC AM everyday
-
 scheduler.add_job(update_base, trigger="cron", hour=18, minute=0)
 try:
     scheduler.start()
