@@ -15,7 +15,7 @@ If you use PC:
 
 ### Interface and function
 
-<img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4809.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4810.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4811.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4812.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4813.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4814.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4815.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4816.PNG" width="200" />
+<img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4817.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4818.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4819.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4820.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4821.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4822.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4823.PNG" width="200" /><img src="https://github.com/pavel-hushcha/Uschedule_bot/blob/master/docs/IMG_4824.PNG" width="200" />
 
 ## Authors
 
