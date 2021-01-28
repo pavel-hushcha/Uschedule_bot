@@ -6,26 +6,12 @@ Its showing the schedule of lessons in Polessky State University
 ## Getting Started
 
 
-
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-```
-In future
-```
-
 ### Installing
 
-How to install:
+If you use mobile phone:
+- just find @USchedule in Telegram and start it
 
-```
-In future
-```
-
-```
-until finished
-```
+If you 
 
 ## Running the tests
 
