@@ -60,6 +60,7 @@ def handle_text(message):
 @bot.message_handler(func=lambda message: "Поиск названия группы / преподавателя / аудитории:" == message.text,
                      content_types=["text"])
 def handle_text(message):
+    sql.set_getting_position(str(message.chat.id))
     search_message = "Для поиска введите не менее 3 символов:"
     msgname = bot.send_message(message.chat.id, search_message)
     bot.register_next_step_handler(msgname, search_name_group)
@@ -120,7 +121,10 @@ def save_name_group(message):
 # main search menu handler
 @bot.message_handler(func=lambda message: "Расписание на сегодняшний день" == message.text or
                                           "Расписание на завтрашний день" == message.text or
-                                          "Расписание на неделю" == message.text, content_types=["text"])
+                                          "Расписание на неделю" == message.text or
+                                          "Подписаться на ежедневные оповещения о занятиях в 7-00" == message.text or
+                                          "Отписаться от ежедневных оповещений о занятиях в 7-00" == message.text,
+                                          content_types=["text"])
 # display the today and tomorrow schedule of lessons
 def handle_text(message):
     name = sql.verification(str(message.chat.id))
@@ -160,6 +164,16 @@ def handle_text(message):
                                                                              + now[-4:]))
         bot.send_message(message.chat.id, "Выберите необходимую Вам неделю", reply_markup=week_markup)
 
+    if message.text == "Подписаться на ежедневные оповещения о занятиях в 7-00":
+        sql.set_subscribe(str(message.chat.id), name)
+        bot.send_message(message.chat.id, f"Подписка на ежедневные оповещения в 7-00 о занятиях {name} установлена!")
+        keyboard.main_back_menu(message)
+
+    if message.text == "Отписаться от ежедневных оповещений о занятиях в 7-00":
+        sql.clear_subscriber_position(str(message.chat.id))
+        bot.send_message(message.chat.id, f"Подписка на ежедневные оповещения о занятиях удалена!")
+        keyboard.main_back_menu(message)
+
 
 # schedule week of lessons handler
 @bot.callback_query_handler(func=lambda call: True)
@@ -171,7 +185,6 @@ def handle_query(call):
             bot.send_message(call.message.chat.id, "Занятия отсутствуют.")
             keyboard.main_menu(call)
         else:
-            sql.set_getting_position(str(call.message.chat.id))
             sql.set_search_position(str(call.message.chat.id), list_teachers[int(call.data)])
             keyboard.schedule_menu(call)
     else:
@@ -208,8 +221,22 @@ def update_base():
                 sql.insert_lessons_teacher(schedule, d_ch)
 
 
-# scheduler of database updating at 15-00 UTC AM everyday
+# everyday at 4-00 UTC sending for subscribers lessons for today
+def ringers():
+    subscribers = sql.ringer_information()
+    today = datetime.datetime.now().date().strftime("%d-%m-%Y")
+    for subscriber in subscribers:
+        lessons = display.check_return_lessons(subscribers.get(subscriber), semestr)
+        message = display.display_schedule(subscribers.get(subscriber), today, lessons)
+        if message:
+            bot.send_message(subscriber, message)
+        else:
+            bot.send_message(subscriber, "Сегодня занятий нет.")
+
+
+# scheduler of database updating at 14-30 UTC everyday and ringer for subscribers at 4-00 UTC
 scheduler.add_job(update_base, trigger="cron", hour=14, minute=30)
+scheduler.add_job(ringers, trigger="cron", day_of_week='mon-sat', hour=4, minute=0)
 try:
     scheduler.start()
 except (KeyboardInterrupt, SystemExit):

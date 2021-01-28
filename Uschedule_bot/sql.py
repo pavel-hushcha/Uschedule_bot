@@ -179,12 +179,32 @@ class Sql:
         cur.close()
         con.close()
 
-    # # insert into user_position table telegram user_id
-    # def set_getting_position(self, user_id):
-    #     con = psycopg2.connect(self.url)
-    #     cur = con.cursor()
-    #     cur.execute(f"INSERT INTO USER_POSITION (USER_ID, NAME_GROUP, SEARCH_POS) VALUES "
-    #                 f"({user_id}, 'none', 'none');")
-    #     con.commit()
-    #     cur.close()
-    #     con.close()
+    # set the name of group or teacher for subscribe
+    def set_subscribe(self, user_id, name):
+        con = psycopg2.connect(self.url)
+        cur = con.cursor()
+        cur.execute(f"INSERT INTO SUBSCRIBERS (USER_ID, NAME_GROUP) VALUES "
+                    f"({user_id}, '{name}');")
+        con.commit()
+        cur.close()
+        con.close()
+
+    # delete row with telegram user_id from subscribers table
+    def clear_subscriber_position(self, user_id):
+        con = psycopg2.connect(self.url)
+        cur = con.cursor()
+        cur.execute(f"DELETE FROM SUBSCRIBERS WHERE USER_ID = ('{user_id}');")
+        con.commit()
+        cur.close()
+        con.close()
+
+    # get the information for ringer
+    def ringer_information(self):
+        ringer_list = {}
+        con = psycopg2.connect(self.url)
+        cur = con.cursor()
+        cur.execute(f"SELECT USER_ID, NAME_GROUP FROM SUBSCRIBERS;")
+        rows = cur.fetchall()
+        for row in rows:
+            ringer_list[row[0]] = row[1]
+        return ringer_list
