@@ -35,7 +35,7 @@ sql.create_user_position()
 # start message
 @bot.message_handler(commands=["start"])
 def handle_text(message):
-    user_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    user_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     user_keyboard.row("Ввести полное название группы / преподавателя / аудитории:")
     user_keyboard.row("Поиск названия группы / преподавателя / аудитории:")
     start_message = "Вас приветствует бот показа расписания занятий в Полесском государственном " \
@@ -68,8 +68,6 @@ def handle_text(message):
 
 # search the name of group or teacher in the list of them
 def search_name_group(message):
-    search_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
-    search_keyboard.row("Главное меню")
     sample_name_group = message.text.lower()
     search_markup = telebot.types.InlineKeyboardMarkup()
     if len(sample_name_group) > 2:  # check for minimum 3 symbols searching
@@ -132,7 +130,7 @@ def handle_text(message):
 
     if message.text == "Расписание на сегодняшний день":
         lessons = display.check_return_lessons(name, semestr)
-        today_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        today_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         today_keyboard.row("Назад")
         today_keyboard.row("Главное меню")
         today_display = display.display_schedule(name, now, lessons)
@@ -145,7 +143,7 @@ def handle_text(message):
     if message.text == "Расписание на завтрашний день":
         lessons = display.check_return_lessons(name, semestr)
         tomorrow = (datetime.date.today() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
-        tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         tomorrow_keyboard.row("Назад")
         tomorrow_keyboard.row("Главное меню")
         tomorrow_display = display.display_schedule(name, tomorrow, lessons)
@@ -190,7 +188,7 @@ def handle_query(call):
     else:
         name = sql.verification(str(call.message.chat.id))
         lessons = display.check_return_lessons(name, semestr)
-        back_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        back_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         back_keyboard.row("Назад")
         back_keyboard.row("Главное меню")
         days = {0: "Понедельник", 1: "Вторник", 2: "Среда", 3: "Четверг", 4: "Пятница", 5: "Суббота"}

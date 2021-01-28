@@ -9,7 +9,7 @@ class Keyboard:
 
     # create the main menu
     def main_menu(self, message):
-        user_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        user_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         user_keyboard.row("Ввести полное название группы / преподавателя / аудитории:")
         user_keyboard.row("Поиск названия группы / преподавателя / аудитории:")
         start_message = "Вас приветствует бот показа расписания занятий в Полесском государственном " \
@@ -29,7 +29,7 @@ class Keyboard:
 
     # create the menu with main menu and back buttons
     def main_back_menu(self, message):
-        main_back_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        main_back_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         main_back_keyboard.row("Назад")
         main_back_keyboard.row("Главное меню")
         self.bot.send_message(message.from_user.id, "Выберите пункт меню:", reply_markup=main_back_keyboard)
