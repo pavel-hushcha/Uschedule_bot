@@ -227,9 +227,9 @@ def ringers():
     today = datetime.datetime.now().date().strftime("%d-%m-%Y")
     for subscriber in subscribers:
         lessons = display.check_return_lessons(subscribers.get(subscriber), semestr)
-        message = display.display_schedule(subscribers.get(subscriber), today, lessons)
+        message = display.display_schedule(subscribers.get(subscriber), "09-02-2021", lessons)
         if message:
-            bot.send_message(subscriber, message)
+            bot.send_message(subscriber, "Сегодня ожидаются следующие занятия:" + "\n" + message)
         else:
             bot.send_message(subscriber, "Сегодня занятий нет.")
 
