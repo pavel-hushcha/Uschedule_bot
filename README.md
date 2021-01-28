@@ -12,7 +12,7 @@ If you use mobile phone:
 - just find @USchedule in Telegram and start it
 
 If you use PC:
-- click this link https://t.me/USchedule_bot
+- click this [link](https://t.me/USchedule_bot)
 
 ## Running the tests
 
