@@ -114,7 +114,7 @@ class Sql:
         con.close()
         return exist
 
-    # create the empty table named by user_position
+    # create the empty table named by user_position and subscribers
     def create_user_position(self):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
@@ -123,6 +123,10 @@ class Sql:
                     "USER_ID TEXT NULL, "
                     "NAME_GROUP TEXT NULL, "
                     "SEARCH_POS TEXT NULL);")
+        cur.execute("CREATE TABLE IF NOT EXISTS SUBSCRIBERS ("
+                    "ID SERIAL PRIMARY KEY, "
+                    "USER_ID TEXT NULL, "
+                    "NAME_GROUP TEXT NULL);")
         con.commit()
         cur.close()
         con.close()
@@ -174,3 +178,13 @@ class Sql:
         con.commit()
         cur.close()
         con.close()
+
+    # # insert into user_position table telegram user_id
+    # def set_getting_position(self, user_id):
+    #     con = psycopg2.connect(self.url)
+    #     cur = con.cursor()
+    #     cur.execute(f"INSERT INTO USER_POSITION (USER_ID, NAME_GROUP, SEARCH_POS) VALUES "
+    #                 f"({user_id}, 'none', 'none');")
+    #     con.commit()
+    #     cur.close()
+    #     con.close()
