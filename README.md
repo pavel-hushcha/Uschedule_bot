@@ -11,7 +11,8 @@ Its showing the schedule of lessons in Polessky State University
 If you use mobile phone:
 - just find @USchedule in Telegram and start it
 
-If you 
+If you use PC:
+- click this link https://t.me/USchedule_bot
 
 ## Running the tests
 
