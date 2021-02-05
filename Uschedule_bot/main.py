@@ -135,7 +135,7 @@ def handle_text(message):
         today_keyboard.row("Главное меню")
         today_display = display.display_schedule(name, now, lessons)
         if today_display:
-            today_message = now + ":" + "\n\n" + today_display
+            today_message = now + ":" + "\n" + today_display
         else:
             today_message = now + ":" + "\n" + "Занятия отсутствуют."
         bot.send_message(message.chat.id, today_message, reply_markup=today_keyboard)
@@ -148,7 +148,7 @@ def handle_text(message):
         tomorrow_keyboard.row("Главное меню")
         tomorrow_display = display.display_schedule(name, tomorrow, lessons)
         if tomorrow_display:
-            tomorrow_message = tomorrow + ":" + "\n\n" + tomorrow_display
+            tomorrow_message = tomorrow + ":" + "\n" + tomorrow_display
         else:
             tomorrow_message = tomorrow + ":" + "\n" + "Занятия отсутствуют."
         bot.send_message(message.chat.id, tomorrow_message, reply_markup=tomorrow_keyboard)
