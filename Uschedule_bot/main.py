@@ -144,7 +144,8 @@ def handle_text(message):
 
     if message.text == "Расписание на завтрашний день":
         lessons = display.check_return_lessons(name, semestr)
-        tomorrow = (datetime.date.today() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
+        tz = pytz.timezone("Europe/Minsk")
+        tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
         tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         tomorrow_keyboard.row("Назад")
         tomorrow_keyboard.row("Главное меню")
