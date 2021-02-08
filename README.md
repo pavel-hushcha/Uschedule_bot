@@ -1,14 +1,14 @@
 # USCHEDULE
 
 Uschedule - Telegram chatbot for students and teachers.
-Its showing the schedule of lessons in Polessky State University
+It's showing the schedule of lessons in Polessky State University
 
 ## Getting Started
 
 ### Installing
 
-If you use mobile phone:
-- just find @USchedule in Telegram and start it
+If you use a mobile phone:
+- just find @USchedule_bot in Telegram and start it
 
 If you use PC:
 - click this [link](https://t.me/USchedule_bot)

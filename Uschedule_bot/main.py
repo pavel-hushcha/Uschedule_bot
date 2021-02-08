@@ -4,6 +4,7 @@ import telebot
 import os
 import re
 import datetime
+import pytz
 import sql
 import parsing
 import keyboard
@@ -126,7 +127,8 @@ def save_name_group(message):
 # display the today and tomorrow schedule of lessons
 def handle_text(message):
     name = sql.verification(str(message.chat.id))
-    now = datetime.datetime.now().date().strftime("%d-%m-%Y")
+    tz = pytz.timezone("Europe/Minsk")
+    now = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
 
     if message.text == "Расписание на сегодняшний день":
         lessons = display.check_return_lessons(name, semestr)
@@ -222,7 +224,8 @@ def update_base():
 # everyday at 4-00 UTC sending for subscribers lessons for today
 def ringers():
     subscribers = sql.ringer_information()
-    today = datetime.datetime.now().date().strftime("%d-%m-%Y")
+    tz = pytz.timezone("Europe/Minsk")
+    today = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
     if subscribers:
         for subscriber in subscribers:
             lessons = display.check_return_lessons(subscribers.get(subscriber), semestr)
@@ -234,7 +237,7 @@ def ringers():
 
 
 # scheduler of database updating at 14-30 UTC everyday and ringer for subscribers at 4-00 UTC
-scheduler.add_job(update_base, trigger="cron", hour=14, minute=30)
+scheduler.add_job(update_base, trigger="cron", day_of_week='mon-sat', hour=14, minute=30)
 scheduler.add_job(ringers, trigger="cron", day_of_week='mon-sat', hour=4, minute=0)
 try:
     scheduler.start()
