@@ -37,28 +37,28 @@ sql.create_user_position()
 @bot.message_handler(commands=["start"])
 def handle_text(message):
     user_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    user_keyboard.row("Ввести полное название группы / преподавателя / аудитории:")
-    user_keyboard.row("Поиск названия группы / преподавателя / аудитории:")
+    user_keyboard.row("🏫 Ввести полное название группы / преподавателя / аудитории:")
+    user_keyboard.row("🔎 Поиск названия группы / преподавателя / аудитории:")
     start_message = "Вас приветствует бот показа расписания занятий в Полесском государственном " \
                     "университете. Для вывода расписания вы должны сделать выбор:"
     bot.send_message(message.from_user.id, start_message, reply_markup=user_keyboard)
 
 
 # returns to main menu handler
-@bot.message_handler(func=lambda message: "Главное меню" == message.text, content_types=['text'])
+@bot.message_handler(func=lambda message: "✅ Главное меню" == message.text, content_types=['text'])
 def handle_text(message):
     keyboard.main_menu(message)
     sql.clear_getting_position(str(message.from_user.id))   # clear the user_id in user_position table
 
 
 # returns to search schedule menu handler
-@bot.message_handler(func=lambda message: "Назад" == message.text, content_types=['text'])
+@bot.message_handler(func=lambda message: "🔀 Назад" == message.text, content_types=['text'])
 def handle_text(message):
     keyboard.schedule_menu(message)
 
 
 # search the name of group and teacher menu handler
-@bot.message_handler(func=lambda message: "Поиск названия группы / преподавателя / аудитории:" == message.text,
+@bot.message_handler(func=lambda message: "🔎 Поиск названия группы / преподавателя / аудитории:" == message.text,
                      content_types=["text"])
 def handle_text(message):
     sql.set_getting_position(str(message.chat.id))
@@ -90,8 +90,8 @@ def search_name_group(message):
 
 
 # collecting the name of group or teacher handler
-@bot.message_handler(func=lambda message: "Ввести полное название группы / преподавателя / аудитории:" == message.text,
-                     content_types=["text"])
+@bot.message_handler(func=lambda message: "🏫 Ввести полное название группы / преподавателя / аудитории:"
+                                          == message.text, content_types=["text"])
 def handle_text(message):
     sql.set_getting_position(str(message.chat.id))
     find_message = "Введите, пожалуйста, полное название группы (например, 18ММТ-1), преподавателя " \
@@ -118,11 +118,11 @@ def save_name_group(message):
 
 
 # main search menu handler
-@bot.message_handler(func=lambda message: "Расписание на сегодняшний день" == message.text or
-                                          "Расписание на завтрашний день" == message.text or
-                                          "Расписание на неделю" == message.text or
-                                          "Подписаться на ежедневные оповещения о занятиях в 7-00" == message.text or
-                                          "Отписаться от ежедневных оповещений о занятиях в 7-00" == message.text,
+@bot.message_handler(func=lambda message: "📌 Расписание на сегодняшний день" == message.text or
+                                          "📌 Расписание на завтрашний день" == message.text or
+                                          "📆 Расписание на неделю" == message.text or
+                                          "⏰ Подписаться на ежедневные оповещения о занятиях в 7-00" == message.text or
+                                          "🔕 Отписаться от ежедневных оповещений о занятиях в 7-00" == message.text,
                                           content_types=["text"])
 # display the today and tomorrow schedule of lessons
 def handle_text(message):
@@ -130,11 +130,11 @@ def handle_text(message):
     tz = pytz.timezone("Europe/Minsk")
     now = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
 
-    if message.text == "Расписание на сегодняшний день":
+    if message.text == "📌 Расписание на сегодняшний день":
         lessons = display.check_return_lessons(name, semestr)
         today_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        today_keyboard.row("Назад")
-        today_keyboard.row("Главное меню")
+        today_keyboard.row("🔀 Назад")
+        today_keyboard.row("✅ Главное меню")
         today_display = display.display_schedule(name, now, lessons)
         if today_display:
             today_message = now + ":" + "\n" + today_display
@@ -142,13 +142,13 @@ def handle_text(message):
             today_message = now + ":" + "\n" + "Занятия отсутствуют."
         bot.send_message(message.chat.id, today_message, reply_markup=today_keyboard)
 
-    if message.text == "Расписание на завтрашний день":
+    if message.text == "📌 Расписание на завтрашний день":
         lessons = display.check_return_lessons(name, semestr)
         tz = pytz.timezone("Europe/Minsk")
         tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
         tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        tomorrow_keyboard.row("Назад")
-        tomorrow_keyboard.row("Главное меню")
+        tomorrow_keyboard.row("🔀 Назад")
+        tomorrow_keyboard.row("✅ Главное меню")
         tomorrow_display = display.display_schedule(name, tomorrow, lessons)
         if tomorrow_display:
             tomorrow_message = tomorrow + ":" + "\n" + tomorrow_display
@@ -156,7 +156,7 @@ def handle_text(message):
             tomorrow_message = tomorrow + ":" + "\n" + "Занятия отсутствуют."
         bot.send_message(message.chat.id, tomorrow_message, reply_markup=tomorrow_keyboard)
 
-    if message.text == "Расписание на неделю":
+    if message.text == "📆 Расписание на неделю":
         week_markup = telebot.types.InlineKeyboardMarkup()
         weeks = parsing.list_weeks(name, semestr)
         for day in weeks:
@@ -165,14 +165,14 @@ def handle_text(message):
                                                                              + now[-4:]))
         bot.send_message(message.chat.id, "Выберите необходимую Вам неделю", reply_markup=week_markup)
 
-    if message.text == "Подписаться на ежедневные оповещения о занятиях в 7-00":
+    if message.text == "⏰ Подписаться на ежедневные оповещения о занятиях в 7-00":
         sql.set_subscribe(str(message.chat.id), name)
         bot.send_message(message.chat.id, f"Подписка на ежедневные оповещения в 7-00 о занятиях {name} установлена!")
         keyboard.main_back_menu(message)
 
-    if message.text == "Отписаться от ежедневных оповещений о занятиях в 7-00":
+    if message.text == "🔕 Отписаться от ежедневных оповещений о занятиях в 7-00":
         sql.clear_subscriber_position(str(message.chat.id))
-        bot.send_message(message.chat.id, f"Подписка на ежедневные оповещения о занятиях удалена!")
+        bot.send_message(message.chat.id, "Подписка на ежедневные оповещения о занятиях удалена!")
         keyboard.main_back_menu(message)
 
 
@@ -192,11 +192,11 @@ def handle_query(call):
         name = sql.verification(str(call.message.chat.id))
         lessons = display.check_return_lessons(name, semestr)
         back_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        back_keyboard.row("Назад")
-        back_keyboard.row("Главное меню")
+        back_keyboard.row("🔀 Назад")
+        back_keyboard.row("✅ Главное меню")
         days = {0: "Понедельник", 1: "Вторник", 2: "Среда", 3: "Четверг", 4: "Пятница", 5: "Суббота"}
         monday = datetime.datetime.strptime(call.data, "%d-%m-%Y")
-        for day_schedule in range(0, 6):
+        for day_schedule in range(6):
             dayz = datetime.datetime.strftime(monday + datetime.timedelta(days=day_schedule), "%d-%m-%Y")
             bot.send_message(call.message.chat.id, f"{days.get(day_schedule)} {dayz}:")
             display_day = display.display_schedule(name, dayz, lessons)
@@ -215,8 +215,15 @@ def update_base():
         if parsing.list_weeks(item, semestr):
             schedule = parsing.make_schedule_for_teacher(item, semestr)
             d_ch = parsing.pars_changes(semestr)
-            sql.delete_table(item)
-            if re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
+            if sql.check_table(item):
+                date_table = datetime.datetime.strptime(sql.read_date(item), "%Y-%m-%d %H:%M:%S")
+                if date_table != d_ch:
+                    sql.delete_table(item)
+                    if re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
+                        sql.insert_lessons_group(schedule, d_ch)
+                    else:
+                        sql.insert_lessons_teacher(schedule, d_ch)
+            elif re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
                 sql.insert_lessons_group(schedule, d_ch)
             else:
                 sql.insert_lessons_teacher(schedule, d_ch)
@@ -237,7 +244,7 @@ def ringers():
                 bot.send_message(subscriber, "Сегодня занятий нет.")
 
 
-# scheduler of database updating at 14-30 UTC everyday and ringer for subscribers at 4-00 UTC
+# scheduler of database updating at 14-30 UTC and ringer for subscribers at 4-00 UTC from monday to saturday
 scheduler.add_job(update_base, trigger="cron", day_of_week='mon-sat', hour=14, minute=30)
 scheduler.add_job(ringers, trigger="cron", day_of_week='mon-sat', hour=4, minute=0)
 try:
