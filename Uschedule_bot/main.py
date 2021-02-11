@@ -5,6 +5,7 @@ import os
 import re
 import datetime
 import pytz
+import logging
 import sql
 import parsing
 import keyboard
@@ -252,6 +253,8 @@ try:
 except (KeyboardInterrupt, SystemExit):
     pass
 
+logger = telebot.logger
+telebot.logger.setLevel(logging.ERROR)
 
 if __name__ == '__main__':
     bot.infinity_polling()
