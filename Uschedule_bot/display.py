@@ -52,9 +52,9 @@ def display_schedule(name, date, lessons):
     if date in lessons:     # check if lessons in this day exist
         for part in lessons.get(date):
             if re.match(r"\d\d[А-Я]", name) or re.match(r"[А-Я]{2}-\d\d", name):
-                displ_schedule += f"*{part[0]}* | {part[1]} | *{part[2]}* | {part[3]} | {part[4]}"
+                displ_schedule += f"📍*{part[0]}* | {part[1]} | *{part[2]}* | {part[3]} | {part[4]}"
                 displ_schedule += "\n"
             else:
-                displ_schedule += f"*{part[0]}* | {part[1]} | *{part[2]}* | {part[3]}"
+                displ_schedule += f"📍*{part[0]}* | {part[1]} | *{part[2]}* | {part[3]}"
                 displ_schedule += "\n"
     return displ_schedule
