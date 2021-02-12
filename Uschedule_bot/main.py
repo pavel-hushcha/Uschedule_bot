@@ -141,7 +141,7 @@ def handle_text(message):
             today_message = now + ":" + "\n" + today_display
         else:
             today_message = now + ":" + "\n" + "Занятия отсутствуют."
-        bot.send_message(message.chat.id, today_message, reply_markup=today_keyboard)
+        bot.send_message(message.chat.id, today_message, reply_markup=today_keyboard, parse_mode="Markdown")
 
     if message.text == "📌 Расписание на завтрашний день":
         lessons = display.check_return_lessons(name, semestr)
@@ -155,7 +155,7 @@ def handle_text(message):
             tomorrow_message = tomorrow + ":" + "\n" + tomorrow_display
         else:
             tomorrow_message = tomorrow + ":" + "\n" + "Занятия отсутствуют."
-        bot.send_message(message.chat.id, tomorrow_message, reply_markup=tomorrow_keyboard)
+        bot.send_message(message.chat.id, tomorrow_message, reply_markup=tomorrow_keyboard, parse_mode="Markdown")
 
     if message.text == "📆 Расписание на неделю":
         week_markup = telebot.types.InlineKeyboardMarkup()
@@ -202,7 +202,7 @@ def handle_query(call):
             bot.send_message(call.message.chat.id, f"{days.get(day_schedule)} {dayz}:")
             display_day = display.display_schedule(name, dayz, lessons)
             if display_day:
-                bot.send_message(call.message.chat.id, display_day)
+                bot.send_message(call.message.chat.id, display_day, parse_mode="Markdown")
         bot.send_message(call.message.chat.id, "Выберите пункт меню:", reply_markup=back_keyboard)
 
 
