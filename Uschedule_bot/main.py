@@ -130,31 +130,35 @@ def handle_text(message):
     name = sql.verification(str(message.chat.id))
     tz = pytz.timezone("Europe/Minsk")
     now = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
+    week = {1: "Понедельник", 2: "Вторник", 3: "Среда", 4: "Четверг", 5: "Пятница", 6: "Суббота"}
 
     if message.text == "📌 Расписание на сегодняшний день":
         lessons = display.check_return_lessons(name, semestr)
         today_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        now_day = datetime.datetime.now(tz=tz)
         today_keyboard.row("🔀 Назад")
         today_keyboard.row("✅ Главное меню")
         today_display = display.display_schedule(name, now, lessons)
         if today_display:
-            today_message = now + ":" + "\n" + today_display
+            today_message = week.get(now_day.isoweekday()) + ", " + now + ":" + "\n" + today_display
         else:
-            today_message = now + ":" + "\n" + "Занятия отсутствуют."
+            today_message = week.get(now_day.isoweekday()) + ", " + now + ":" + "\n" + "Занятия отсутствуют."
         bot.send_message(message.chat.id, today_message, reply_markup=today_keyboard, parse_mode="Markdown")
 
     if message.text == "📌 Расписание на завтрашний день":
         lessons = display.check_return_lessons(name, semestr)
         tz = pytz.timezone("Europe/Minsk")
         tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
+        tomorrow_day = datetime.datetime.now(tz=tz) + datetime.timedelta(days=1)
         tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         tomorrow_keyboard.row("🔀 Назад")
         tomorrow_keyboard.row("✅ Главное меню")
         tomorrow_display = display.display_schedule(name, tomorrow, lessons)
         if tomorrow_display:
-            tomorrow_message = tomorrow + ":" + "\n" + tomorrow_display
+            tomorrow_message = week.get(tomorrow_day.isoweekday()) + ", " + tomorrow + ":" + "\n" + tomorrow_display
         else:
-            tomorrow_message = tomorrow + ":" + "\n" + "Занятия отсутствуют."
+            tomorrow_message = week.get(tomorrow_day.isoweekday()) + ", " + tomorrow + ":" + "\n" +\
+                               "Занятия отсутствуют."
         bot.send_message(message.chat.id, tomorrow_message, reply_markup=tomorrow_keyboard, parse_mode="Markdown")
 
     if message.text == "📆 Расписание на неделю":
@@ -199,7 +203,7 @@ def handle_query(call):
         monday = datetime.datetime.strptime(call.data, "%d-%m-%Y")
         for day_schedule in range(6):
             dayz = datetime.datetime.strftime(monday + datetime.timedelta(days=day_schedule), "%d-%m-%Y")
-            bot.send_message(call.message.chat.id, f"{days.get(day_schedule)} {dayz}:")
+            bot.send_message(call.message.chat.id, f"{days.get(day_schedule)}, {dayz}:")
             display_day = display.display_schedule(name, dayz, lessons)
             if display_day:
                 bot.send_message(call.message.chat.id, display_day, parse_mode="Markdown")
