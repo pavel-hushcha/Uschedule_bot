@@ -259,6 +259,7 @@ except (KeyboardInterrupt, SystemExit):
 
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
+telebot.logger.error("Error", exc_info=True)
 
 if __name__ == '__main__':
     bot.infinity_polling()
