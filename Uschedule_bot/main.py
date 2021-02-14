@@ -130,7 +130,7 @@ def handle_text(message):
     name = sql.verification(str(message.chat.id))
     tz = pytz.timezone("Europe/Minsk")
     now = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
-    week = {1: "Понедельник", 2: "Вторник", 3: "Среда", 4: "Четверг", 5: "Пятница", 6: "Суббота"}
+    week = {1: "Понедельник", 2: "Вторник", 3: "Среда", 4: "Четверг", 5: "Пятница", 6: "Суббота", 7: "Воскресенье"}
 
     if message.text == "📌 Расписание на сегодняшний день":
         lessons = display.check_return_lessons(name, semestr)
@@ -259,6 +259,7 @@ except (KeyboardInterrupt, SystemExit):
 
 logger = telebot.logger
 telebot.logger.setLevel(logging.ERROR)
+logging.error("Something wrong", exc_info=True)
 
 if __name__ == '__main__':
     bot.infinity_polling()
