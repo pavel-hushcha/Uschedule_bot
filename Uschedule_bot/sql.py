@@ -64,10 +64,10 @@ class Sql:
         cur = con.cursor()
         cur.execute(f"SELECT {columns_reader} from \"{name_teacher}\";")
         rows = cur.fetchall()
-        for row in rows:
-            sql_answer.setdefault(row[0], []).append(list(row[1:]))
         cur.close()
         con.close()
+        for row in rows:
+            sql_answer.setdefault(row[0], []).append(list(row[1:]))
         return sql_answer
 
     # read the group's lessons from sql:
@@ -79,10 +79,10 @@ class Sql:
         cur = con.cursor()
         cur.execute(f"SELECT {columns_reader} from \"{name_group}\";")
         rows = cur.fetchall()
-        for row in rows:
-            sql_answer.setdefault(row[0], []).append(list(row[1:]))
         cur.close()
         con.close()
+        for row in rows:
+            sql_answer.setdefault(row[0], []).append(list(row[1:]))
         return sql_answer
 
     # deleting table from database
@@ -168,6 +168,8 @@ class Sql:
         cur.execute(f"SELECT NAME_GROUP FROM USER_POSITION WHERE ID IN "
                     f"(SELECT max(ID) FROM USER_POSITION WHERE USER_ID = ('{user_id}'));")
         search = cur.fetchone()
+        cur.close()
+        con.close()
         return str(*search)
 
     # delete row with telegram user_id from user_position table
@@ -205,6 +207,9 @@ class Sql:
         cur = con.cursor()
         cur.execute(f"SELECT USER_ID, NAME_GROUP FROM SUBSCRIBERS;")
         rows = cur.fetchall()
+        cur.close()
+        con.close()
         for row in rows:
             ringer_list[row[0]] = row[1]
         return ringer_list
+
