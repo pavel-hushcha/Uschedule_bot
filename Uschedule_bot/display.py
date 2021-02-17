@@ -19,7 +19,7 @@ sql = sql.Sql(database_url)
 
 
 # check database tables and returns the dictionary of teacher's lessons
-def check_return_lessons(name, semestr):
+def check_return_lessons(name, semestr, date):
     date_changes = parsing.pars_changes(semestr)
     parsing_schedule = parsing.make_schedule_for_teacher(name, semestr)
     if not sql.check_table(name):  # check if lessons of teacher do not exist in database
@@ -31,18 +31,18 @@ def check_return_lessons(name, semestr):
     date_table = datetime.datetime.strptime(sql.read_date(name), "%Y-%m-%d %H:%M:%S")
     if re.match(r"\d\d[А-Я]", name) or re.match(r"[А-Я]{2}-\d\d", name):
         if date_table == date_changes:
-            lessons = sql.read_lessons_group(name)
+            lessons = sql.read_lessons_group(name, date)
         else:
             sql.delete_table(name)  # upgrade the table if date is over
             sql.insert_lessons_group(parsing_schedule, date_changes)
-            lessons = sql.read_lessons_group(name)
+            lessons = sql.read_lessons_group(name, date)
     else:
         if date_table == date_changes:
-            lessons = sql.read_lessons_teacher(name)
+            lessons = sql.read_lessons_teacher(name, date)
         else:
             sql.delete_table(name)
             sql.insert_lessons_teacher(parsing_schedule, date_changes)
-            lessons = sql.read_lessons_teacher(name)
+            lessons = sql.read_lessons_teacher(name, date)
     return lessons
 
 
@@ -58,4 +58,3 @@ def display_schedule(name, date, lessons):
                 displ_schedule += f"📍*{part[0]}* | {part[1]} | *{part[2]}* | {part[3]}"
                 displ_schedule += "\n"
     return displ_schedule
-

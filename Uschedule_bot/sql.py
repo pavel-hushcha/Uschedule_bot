@@ -57,12 +57,15 @@ class Sql:
 
     # read the teacher's lessons from sql:
     # {'15-02-2021': [['8:30-10:05', 'Маркетинг  - лек.', '406', 'Рыбалко Юлия Александровна', '']]}
-    def read_lessons_teacher(self, name_teacher):
+    def read_lessons_teacher(self, name_teacher, date):
         columns_reader = ", ".join(["DATE", "TIME_LESSON", "LESSON", "CLASSROOM", "GROUPS"])
         sql_answer = {}
         con = psycopg2.connect(self.url)
         cur = con.cursor()
-        cur.execute(f"SELECT {columns_reader} from \"{name_teacher}\";")
+        if date:
+            cur.execute(f"SELECT {columns_reader} FROM \"{name_teacher}\" WHERE DATE = '{date}';")
+        else:
+            cur.execute(f"SELECT {columns_reader} FROM \"{name_teacher}\";")
         rows = cur.fetchall()
         cur.close()
         con.close()
@@ -72,12 +75,15 @@ class Sql:
 
     # read the group's lessons from sql:
     # {'15-02-2021': [['8:30-10:05', 'Маркетинг  - лек.', '406', 'Рыбалко Юлия Александровна', '']]}
-    def read_lessons_group(self, name_group):
+    def read_lessons_group(self, name_group, date):
         columns_reader = ", ".join(["DATE", "TIME_LESSON", "LESSON", "CLASSROOM", "GROUPS", "SUBGROUPS"])
         sql_answer = {}
         con = psycopg2.connect(self.url)
         cur = con.cursor()
-        cur.execute(f"SELECT {columns_reader} from \"{name_group}\";")
+        if date:
+            cur.execute(f"SELECT {columns_reader} FROM \"{name_group}\" WHERE DATE = '{date}';")
+        else:
+            cur.execute(f"SELECT {columns_reader} FROM \"{name_group}\";")
         rows = cur.fetchall()
         cur.close()
         con.close()
@@ -98,7 +104,7 @@ class Sql:
     def read_date(self, name_table):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
-        cur.execute(f"SELECT DATE_CH from \"{name_table}\";")
+        cur.execute(f"SELECT DATE_CH FROM \"{name_table}\";")
         row = cur.fetchone()
         cur.close()
         con.close()
@@ -212,4 +218,3 @@ class Sql:
         for row in rows:
             ringer_list[row[0]] = row[1]
         return ringer_list
-

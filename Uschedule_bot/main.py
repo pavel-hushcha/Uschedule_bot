@@ -5,7 +5,6 @@ import os
 import re
 import datetime
 import pytz
-import logging
 import sql
 import parsing
 import keyboard
@@ -133,11 +132,11 @@ def handle_text(message):
     week = {1: "Понедельник", 2: "Вторник", 3: "Среда", 4: "Четверг", 5: "Пятница", 6: "Суббота", 7: "Воскресенье"}
 
     if message.text == "📌 Расписание на сегодняшний день":
-        lessons = display.check_return_lessons(name, semestr)
         today_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         now_day = datetime.datetime.now(tz=tz)
         today_keyboard.row("🔀 Назад")
         today_keyboard.row("✅ Главное меню")
+        lessons = display.check_return_lessons(name, semestr, now)
         today_display = display.display_schedule(name, now, lessons)
         if today_display:
             today_message = week.get(now_day.isoweekday()) + ", " + now + ":" + "\n" + today_display
@@ -146,13 +145,13 @@ def handle_text(message):
         bot.send_message(message.chat.id, today_message, reply_markup=today_keyboard, parse_mode="Markdown")
 
     if message.text == "📌 Расписание на завтрашний день":
-        lessons = display.check_return_lessons(name, semestr)
         tz = pytz.timezone("Europe/Minsk")
         tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
         tomorrow_day = datetime.datetime.now(tz=tz) + datetime.timedelta(days=1)
         tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         tomorrow_keyboard.row("🔀 Назад")
         tomorrow_keyboard.row("✅ Главное меню")
+        lessons = display.check_return_lessons(name, semestr, tomorrow)
         tomorrow_display = display.display_schedule(name, tomorrow, lessons)
         if tomorrow_display:
             tomorrow_message = week.get(tomorrow_day.isoweekday()) + ", " + tomorrow + ":" + "\n" + tomorrow_display
@@ -195,7 +194,7 @@ def handle_query(call):
             keyboard.schedule_menu(call)
     else:
         name = sql.verification(str(call.message.chat.id))
-        lessons = display.check_return_lessons(name, semestr)
+        lessons = display.check_return_lessons(name, semestr, None)
         back_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         back_keyboard.row("🔀 Назад")
         back_keyboard.row("✅ Главное меню")
@@ -241,12 +240,12 @@ def ringers():
     today = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
     if subscribers:
         for subscriber in subscribers:
-            lessons = display.check_return_lessons(subscribers.get(subscriber), semestr)
+            lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, today)
             message = display.display_schedule(subscribers.get(subscriber), today, lessons)
             if message:
-                bot.send_message(subscriber, "Сегодня ожидаются следующие занятия:" + "\n" + message)
+                bot.send_message(subscriber, "Доброе утро! Сегодня ожидаются следующие занятия:" + "\n" + message)
             else:
-                bot.send_message(subscriber, "Сегодня занятий нет.")
+                bot.send_message(subscriber, "Доброе утро! Сегодня занятий нет.")
 
 
 # scheduler of database updating at 14-30 UTC and ringer for subscribers at 4-00 UTC from monday to saturday
@@ -256,9 +255,6 @@ try:
     scheduler.start()
 except (KeyboardInterrupt, SystemExit):
     pass
-
-logger = telebot.logger
-telebot.logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':
     bot.infinity_polling()
