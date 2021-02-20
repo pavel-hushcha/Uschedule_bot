@@ -35,7 +35,8 @@ def make_schedule_for_teacher(teacher, semestr):
     # transforming dictionary with lessons by days of week to dictionary with
     # lessons by date
     def transform_to_days(massive):
-        d_of_week = {"Понедельник": 0, "Вторник": 1, "Среда": 2, "Четверг": 3, "Пятница": 4, "Суббота": 5}
+        d_of_week = {"Понедельник": 0, "Вторник": 1, "Среда": 2, "Четверг": 3, "Пятница": 4, "Суббота": 5,
+                     "Воскресенье": 6}
         for lesson in massive.get(day):
             # cut numbers of weeks in names of lessons and transform its
             list_of_numbers_of_weeks = weeks_specify(re.findall(r"\(([^а-яА-Я]*)\)", lesson[1]))

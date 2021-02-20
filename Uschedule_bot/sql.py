@@ -176,7 +176,7 @@ class Sql:
         search = cur.fetchone()
         cur.close()
         con.close()
-        return str(*search)
+        return str(search[0])
 
     # delete row with telegram user_id from user_position table
     def clear_getting_position(self, user_id):
