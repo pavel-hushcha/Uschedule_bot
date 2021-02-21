@@ -67,6 +67,7 @@ class Sql:
         else:
             cur.execute(f"SELECT {columns_reader} FROM \"{name_teacher}\";")
         rows = cur.fetchall()
+        con.commit()
         cur.close()
         con.close()
         for row in rows:
@@ -85,6 +86,7 @@ class Sql:
         else:
             cur.execute(f"SELECT {columns_reader} FROM \"{name_group}\";")
         rows = cur.fetchall()
+        con.commit()
         cur.close()
         con.close()
         for row in rows:
@@ -106,6 +108,7 @@ class Sql:
         cur = con.cursor()
         cur.execute(f"SELECT DATE_CH FROM \"{name_table}\";")
         row = cur.fetchone()
+        con.commit()
         cur.close()
         con.close()
         return str(*row)
@@ -116,6 +119,7 @@ class Sql:
         cur = con.cursor()
         cur.execute(f"SELECT EXISTS (SELECT * FROM information_schema.tables WHERE table_name = \'{name_table}\');")
         exist = bool(cur.fetchone()[0])
+        con.commit()
         cur.close()
         con.close()
         return exist
@@ -174,9 +178,10 @@ class Sql:
         cur.execute(f"SELECT NAME_GROUP FROM USER_POSITION WHERE ID IN "
                     f"(SELECT max(ID) FROM USER_POSITION WHERE USER_ID = ('{user_id}'));")
         search = cur.fetchone()
+        con.commit()
         cur.close()
         con.close()
-        return str(search[0])
+        return str(*search)
 
     # delete row with telegram user_id from user_position table
     def clear_getting_position(self, user_id):
@@ -213,6 +218,7 @@ class Sql:
         cur = con.cursor()
         cur.execute(f"SELECT USER_ID, NAME_GROUP FROM SUBSCRIBERS;")
         rows = cur.fetchall()
+        con.commit()
         cur.close()
         con.close()
         for row in rows:
