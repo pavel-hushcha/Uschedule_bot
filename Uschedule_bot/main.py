@@ -120,7 +120,9 @@ def save_name_group(message):
 # main search menu handler
 @bot.message_handler(func=lambda message: "📌 Расписание на сегодняшний день" == message.text or
                                           "📌 Расписание на завтрашний день" == message.text or
+                                          "👈 Расписание на текущую неделю" == message.text or
                                           "📆 Расписание на неделю" == message.text or
+                                          "👉 Расписание на следующую неделю" == message.text or
                                           "⏰ Подписаться на ежедневные оповещения о занятиях в 7-00" == message.text or
                                           "🔕 Отписаться от ежедневных оповещений о занятиях в 7-00" == message.text,
                                           content_types=["text"])
@@ -145,7 +147,6 @@ def handle_text(message):
         bot.send_message(message.chat.id, today_message, reply_markup=today_keyboard, parse_mode="Markdown")
 
     if message.text == "📌 Расписание на завтрашний день":
-        tz = pytz.timezone("Europe/Minsk")
         tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
         tomorrow_day = datetime.datetime.now(tz=tz) + datetime.timedelta(days=1)
         tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
@@ -160,6 +161,22 @@ def handle_text(message):
                                "Занятия отсутствуют."
         bot.send_message(message.chat.id, tomorrow_message, reply_markup=tomorrow_keyboard, parse_mode="Markdown")
 
+    if message.text == "👈 Расписание на текущую неделю":
+        current_week_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        current_week_keyboard.row("🔀 Назад")
+        current_week_keyboard.row("✅ Главное меню")
+        lessons = display.check_return_lessons(name, semestr, None)
+        today = datetime.datetime.now(tz=tz)
+        monday = today + datetime.timedelta(days=-today.weekday())
+        days = {0: "Понедельник", 1: "Вторник", 2: "Среда", 3: "Четверг", 4: "Пятница", 5: "Суббота"}
+        for day_schedule in range(6):
+            dayz = datetime.datetime.strftime(monday + datetime.timedelta(days=day_schedule), "%d-%m-%Y")
+            bot.send_message(message.chat.id, f"{days.get(day_schedule)}, {dayz}:")
+            display_day = display.display_schedule(name, dayz, lessons)
+            if display_day:
+                bot.send_message(message.chat.id, display_day, parse_mode="Markdown")
+        bot.send_message(message.chat.id, "Выберите пункт меню:", reply_markup=current_week_keyboard)
+
     if message.text == "📆 Расписание на неделю":
         week_markup = telebot.types.InlineKeyboardMarkup()
         weeks = parsing.list_weeks(name, semestr)
@@ -168,6 +185,22 @@ def handle_text(message):
                                                                callback_data=day[0:2] + "-" + day[3:5] + "-"
                                                                              + now[-4:]))
         bot.send_message(message.chat.id, "Выберите необходимую Вам неделю", reply_markup=week_markup)
+
+    if message.text == "👉 Расписание на следующую неделю":
+        next_week_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        next_week_keyboard.row("🔀 Назад")
+        next_week_keyboard.row("✅ Главное меню")
+        lessons = display.check_return_lessons(name, semestr, None)
+        today = datetime.datetime.now(tz=tz)
+        next_monday = today + datetime.timedelta(days=-today.weekday(), weeks=1)
+        days = {0: "Понедельник", 1: "Вторник", 2: "Среда", 3: "Четверг", 4: "Пятница", 5: "Суббота"}
+        for day_schedule in range(6):
+            dayz = datetime.datetime.strftime(next_monday + datetime.timedelta(days=day_schedule), "%d-%m-%Y")
+            bot.send_message(message.chat.id, f"{days.get(day_schedule)}, {dayz}:")
+            display_day = display.display_schedule(name, dayz, lessons)
+            if display_day:
+                bot.send_message(message.chat.id, display_day, parse_mode="Markdown")
+        bot.send_message(message.chat.id, "Выберите пункт меню:", reply_markup=next_week_keyboard)
 
     if message.text == "⏰ Подписаться на ежедневные оповещения о занятиях в 7-00":
         sql.set_subscribe(str(message.chat.id), name)
