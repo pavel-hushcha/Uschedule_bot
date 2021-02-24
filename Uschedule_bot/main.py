@@ -39,6 +39,7 @@ def handle_text(message):
     user_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     user_keyboard.row("🏫 Ввести полное название группы / преподавателя / аудитории:")
     user_keyboard.row("🔎 Поиск названия группы / преподавателя / аудитории:")
+    user_keyboard.row("📨 Обратная связь")
     start_message = "Вас приветствует бот показа расписания занятий в Полесском государственном " \
                     "университете. Для вывода расписания вы должны сделать выбор:"
     bot.send_message(message.from_user.id, start_message, reply_markup=user_keyboard)
@@ -115,6 +116,14 @@ def save_name_group(message):
         else:
             sql.set_search_position(str(message.chat.id), name_group)
             keyboard.schedule_menu(message)
+
+
+@bot.message_handler(func=lambda message: "📨 Обратная связь" == message.text, content_types=["text"])
+def handle_text(message):
+    help_message = "В случае обнаружения ошибок, а также для замечаний и пожеланий пишите по адресу: " \
+                   "*pavel.hushcha@gmail.com*"
+    bot.send_message(message.chat.id, help_message, parse_mode="Markdown")
+    keyboard.main_menu(message)
 
 
 # main search menu handler
@@ -250,19 +259,24 @@ bot.load_next_step_handlers()
 def update_base():
     for item in parsing.list_all(semestr):
         if parsing.list_weeks(item, semestr):
-            schedule = parsing.make_schedule_for_teacher(item, semestr)
-            d_ch = parsing.pars_changes(semestr)
             if sql.check_table(item):
+                d_ch = parsing.pars_changes(semestr)
                 date_table = datetime.datetime.strptime(sql.read_date(item), "%Y-%m-%d %H:%M:%S")
                 if date_table != d_ch:
                     sql.delete_table(item)
                     if re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
+                        schedule = parsing.make_schedule_for_teacher(item, semestr)
                         sql.insert_lessons_group(schedule, d_ch)
                     else:
+                        schedule = parsing.make_schedule_for_teacher(item, semestr)
                         sql.insert_lessons_teacher(schedule, d_ch)
             elif re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
+                d_ch = parsing.pars_changes(semestr)
+                schedule = parsing.make_schedule_for_teacher(item, semestr)
                 sql.insert_lessons_group(schedule, d_ch)
             else:
+                d_ch = parsing.pars_changes(semestr)
+                schedule = parsing.make_schedule_for_teacher(item, semestr)
                 sql.insert_lessons_teacher(schedule, d_ch)
 
 
