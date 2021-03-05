@@ -317,16 +317,19 @@ def ringers():
             lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, today)
             message = display.display_schedule(subscribers.get(subscriber), today, lessons)
             if message:
-                bot.send_message(subscriber, "Доброго времени суток! Сегодня ожидаются следующие занятия:" + "\n"
+                bot.send_message(subscriber, "Доброго времени суток! Сегодня запланированы следующие занятия:" + "\n"
                                  + message, parse_mode="Markdown")
             else:
                 bot.send_message(subscriber, "Доброго времени суток! Сегодня занятий нет.")
 
 
 # scheduler of database updating at 14-30 UTC and ringer for subscribers from monday to saturday
-scheduler.add_job(update_base, trigger="cron", day_of_week='mon-sat', hour=14, minute=30)
+scheduler.add_job(update_base, 'cron', day_of_week='mon-sat', hour=14, minute=30)
+trigger = AndTrigger([IntervalTrigger(minutes=1),
+                      CronTrigger(day_of_week='mon-sat')])
+scheduler.add_job(ringers, trigger)
 # trigger_main = AndTrigger([IntervalTrigger(minutes=1), CronTrigger(day_of_week='mon-sat')])
-scheduler.add_job(ringers, trigger="interval", minutes=1)
+# scheduler.add_job(ringers, trigger="interval", minutes=1)
 try:
     scheduler.start()
 except (KeyboardInterrupt, SystemExit):
