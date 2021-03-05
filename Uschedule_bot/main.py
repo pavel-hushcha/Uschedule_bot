@@ -135,8 +135,8 @@ def handle_text(message):
                                           "👈 Расписание на текущую неделю" == message.text or
                                           "📆 Расписание на неделю" == message.text or
                                           "👉 Расписание на следующую неделю" == message.text or
-                                          "⏰ Оформить подписку на ежедневные оповещения о занятиях" == message.text,
-                                          content_types=["text"])
+                                          "⏰ Оформить (отменить) подписку на ежедневные оповещения о занятиях"
+                                          == message.text, content_types=["text"])
 # display the today and tomorrow schedule of lessons
 def handle_text(message):
     name = sql.verification(str(message.chat.id))
@@ -213,7 +213,7 @@ def handle_text(message):
                 bot.send_message(message.chat.id, display_day, parse_mode="Markdown")
         bot.send_message(message.chat.id, "Выберите пункт меню:", reply_markup=next_week_keyboard)
 
-    if message.text == "⏰ Оформить подписку на ежедневные оповещения о занятиях":
+    if message.text == "⏰ Оформить (отменить) подписку на ежедневные оповещения о занятиях":
         keyboard.subscribers_menu(message)
 
 
