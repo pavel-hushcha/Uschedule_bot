@@ -10,9 +10,6 @@ import parsing
 import keyboard
 import display
 from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.combining import AndTrigger
-from apscheduler.triggers.interval import IntervalTrigger
-from apscheduler.triggers.cron import CronTrigger
 
 # get tokens from token file if it exist or from environment variables
 dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
@@ -325,7 +322,7 @@ def ringers():
 
 # scheduler of database updating at 14-30 UTC and ringer for subscribers from monday to saturday
 scheduler.add_job(update_base, trigger='cron', day_of_week='mon-sat', hour=14, minute=30)
-scheduler.add_job(ringers, trigger='cron', day_of_week='mon-sat', minute='*')
+scheduler.add_job(ringers, trigger='cron', day_of_week='mon-sat', minute='*', max_instances=5)
 try:
     scheduler.start()
 except (KeyboardInterrupt, SystemExit):
