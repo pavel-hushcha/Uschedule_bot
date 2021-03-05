@@ -239,7 +239,7 @@ def set_subscriber(message):
     set_subscriber_keyboard.row("✅ Главное меню")
     time = message.text
     if time.split(":")[0].isdigit() and time.split(":")[1].isdigit() and 0 <= int(time.split(":")[0]) < 24 \
-            and 0 <= int(time.split(":")[1]) < 60:
+            and 0 <= int(time.split(":")[1]) < 60 and len(time.split(":")[0]) == 2 and len(time.split(":")[1]) == 2:
         name = sql.verification(str(message.chat.id))
         sql.set_subscribe(str(message.chat.id), name, time)
         subscriber_message = f"Подписка на ежедневные оповещения в {time} о занятиях {name} установлена!"
