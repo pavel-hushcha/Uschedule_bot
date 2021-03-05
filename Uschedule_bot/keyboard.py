@@ -39,4 +39,6 @@ class Keyboard:
         subscribers_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         subscribers_keyboard.row("⏰ Подписаться на ежедневные оповещения о занятиях")
         subscribers_keyboard.row("🔕 Отписаться от ежедневных оповещений о занятиях")
+        subscribers_keyboard.row("🔀 Назад")
+        subscribers_keyboard.row("✅ Главное меню")
         self.bot.send_message(message.from_user.id, "Выберите пункт меню:", reply_markup=subscribers_keyboard)
