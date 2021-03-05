@@ -242,7 +242,8 @@ def set_subscriber(message):
         subscriber_message = f"Подписка на ежедневные оповещения в {time} о занятиях {name} установлена!"
         bot.send_message(message.chat.id, subscriber_message, reply_markup=set_subscriber_keyboard)
     else:
-        bot.send_message(message.chat.id, "Введите корректное время!", reply_markup=set_subscriber_keyboard)
+        bot.send_message(message.chat.id, "Введите корректное время!")
+        keyboard.subscribers_menu(message)
 
 
 # schedule week of lessons handler
