@@ -19,7 +19,7 @@ class Keyboard:
 
     # create the menu for showing the schedule of lessons
     def schedule_menu(self, message):
-        schedule_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        schedule_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         schedule_keyboard.row("📌 Расписание на сегодняшний день", "📌 Расписание на завтрашний день")
         schedule_keyboard.row("👈 Расписание на текущую неделю", "📆 Расписание на неделю",
                               "👉 Расписание на следующую неделю")
