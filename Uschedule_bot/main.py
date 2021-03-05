@@ -318,7 +318,7 @@ def ringers():
             message = display.display_schedule(subscribers.get(subscriber), today, lessons)
             if message:
                 bot.send_message(subscriber, "Доброго времени суток! Сегодня ожидаются следующие занятия:" + "\n"
-                                 + message)
+                                 + message, parse_mode="Markdown")
             else:
                 bot.send_message(subscriber, "Доброго времени суток! Сегодня занятий нет.")
 
