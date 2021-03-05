@@ -10,6 +10,9 @@ import parsing
 import keyboard
 import display
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.combining import AndTrigger
+from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.triggers.cron import CronTrigger
 
 # get tokens from token file if it exist or from environment variables
 dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
@@ -132,8 +135,7 @@ def handle_text(message):
                                           "👈 Расписание на текущую неделю" == message.text or
                                           "📆 Расписание на неделю" == message.text or
                                           "👉 Расписание на следующую неделю" == message.text or
-                                          "⏰ Подписаться на ежедневные оповещения о занятиях в 7-00" == message.text or
-                                          "🔕 Отписаться от ежедневных оповещений о занятиях в 7-00" == message.text,
+                                          "⏰ Оформить подписку на ежедневные оповещения о занятиях" == message.text,
                                           content_types=["text"])
 # display the today and tomorrow schedule of lessons
 def handle_text(message):
@@ -211,15 +213,39 @@ def handle_text(message):
                 bot.send_message(message.chat.id, display_day, parse_mode="Markdown")
         bot.send_message(message.chat.id, "Выберите пункт меню:", reply_markup=next_week_keyboard)
 
-    if message.text == "⏰ Подписаться на ежедневные оповещения о занятиях в 7-00":
-        sql.set_subscribe(str(message.chat.id), name)
-        bot.send_message(message.chat.id, f"Подписка на ежедневные оповещения в 7-00 о занятиях {name} установлена!")
-        keyboard.main_back_menu(message)
+    if message.text == "⏰ Оформить подписку на ежедневные оповещения о занятиях":
+        keyboard.subscribers_menu(message)
 
-    if message.text == "🔕 Отписаться от ежедневных оповещений о занятиях в 7-00":
+
+@bot.message_handler(func=lambda message: "⏰ Подписаться на ежедневные оповещения о занятиях" == message.text or
+                                          "🔕 Отписаться от ежедневных оповещений о занятиях" == message.text,
+                                          content_types=["text"])
+def handle_text(message):
+
+    if message.text == "⏰ Подписаться на ежедневные оповещения о занятиях":
+        subscriber_message = "Введите, пожалуйста, время оповещения в формате \"07:00\":"
+        msgname = bot.send_message(message.chat.id, subscriber_message)
+        bot.register_next_step_handler(msgname, set_subscriber)
+
+    if message.text == "🔕 Отписаться от ежедневных оповещений о занятиях":
         sql.clear_subscriber_position(str(message.chat.id))
         bot.send_message(message.chat.id, "Подписка на ежедневные оповещения о занятиях удалена!")
         keyboard.main_back_menu(message)
+
+
+def set_subscriber(message):
+    set_subscriber_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    set_subscriber_keyboard.row("🔀 Назад")
+    set_subscriber_keyboard.row("✅ Главное меню")
+    time = message.text
+    if time.split(":")[0].isdigit() and time.split(":")[1].isdigit() and 0 <= int(time.split(":")[0]) < 24 \
+            and 0 <= int(time.split(":")[1]) < 60:
+        name = sql.verification(str(message.chat.id))
+        sql.set_subscribe(str(message.chat.id), name, time)
+        subscriber_message = f"Подписка на ежедневные оповещения в {time} о занятиях {name} установлена!"
+        bot.send_message(message.chat.id, subscriber_message, reply_markup=set_subscriber_keyboard)
+    else:
+        bot.send_message(message.chat.id, "Введите корректное время!", reply_markup=set_subscriber_keyboard)
 
 
 # schedule week of lessons handler
@@ -282,22 +308,25 @@ def update_base():
 
 # everyday at 4-00 UTC sending for subscribers lessons for today
 def ringers():
-    subscribers = sql.ringer_information()
     tz = pytz.timezone("Europe/Minsk")
-    today = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
+    time = datetime.datetime.now(tz=tz).time().strftime("%H:%M")
+    subscribers = sql.ringer_information(time)
     if subscribers:
         for subscriber in subscribers:
+            today = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
             lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, today)
             message = display.display_schedule(subscribers.get(subscriber), today, lessons)
             if message:
-                bot.send_message(subscriber, "Доброе утро! Сегодня ожидаются следующие занятия:" + "\n" + message)
+                bot.send_message(subscriber, "Доброго времени суток! Сегодня ожидаются следующие занятия:" + "\n"
+                                 + message)
             else:
-                bot.send_message(subscriber, "Доброе утро! Сегодня занятий нет.")
+                bot.send_message(subscriber, "Доброго времени суток! Сегодня занятий нет.")
 
 
-# scheduler of database updating at 14-30 UTC and ringer for subscribers at 4-00 UTC from monday to saturday
+# scheduler of database updating at 14-30 UTC and ringer for subscribers from monday to saturday
 scheduler.add_job(update_base, trigger="cron", day_of_week='mon-sat', hour=14, minute=30)
-scheduler.add_job(ringers, trigger="cron", day_of_week='mon-sat', hour=4, minute=0)
+trigger_main = AndTrigger([IntervalTrigger(minutes=1), CronTrigger(day_of_week='mon-sat')])
+scheduler.add_job(ringers, trigger_main)
 try:
     scheduler.start()
 except (KeyboardInterrupt, SystemExit):

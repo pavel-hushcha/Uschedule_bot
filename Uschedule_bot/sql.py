@@ -136,7 +136,8 @@ class Sql:
         cur.execute("CREATE TABLE IF NOT EXISTS SUBSCRIBERS ("
                     "ID SERIAL PRIMARY KEY, "
                     "USER_ID TEXT NULL, "
-                    "NAME_GROUP TEXT NULL);")
+                    "NAME_GROUP TEXT NULL, "
+                    "TIME TEXT NULL);")
         con.commit()
         cur.close()
         con.close()
@@ -193,11 +194,11 @@ class Sql:
         con.close()
 
     # set the name of group or teacher for subscribe
-    def set_subscribe(self, user_id, name):
+    def set_subscribe(self, user_id, name, time):
         con = psycopg2.connect(self.url)
         cur = con.cursor()
-        cur.execute(f"INSERT INTO SUBSCRIBERS (USER_ID, NAME_GROUP) VALUES "
-                    f"({user_id}, '{name}');")
+        cur.execute(f"INSERT INTO SUBSCRIBERS (USER_ID, NAME_GROUP, TIME) VALUES "
+                    f"({user_id}, '{name}', '{time}');")
         con.commit()
         cur.close()
         con.close()
@@ -212,11 +213,11 @@ class Sql:
         con.close()
 
     # get the information for ringer
-    def ringer_information(self):
+    def ringer_information(self, time):
         ringer_list = {}
         con = psycopg2.connect(self.url)
         cur = con.cursor()
-        cur.execute(f"SELECT USER_ID, NAME_GROUP FROM SUBSCRIBERS;")
+        cur.execute(f"SELECT USER_ID, NAME_GROUP FROM SUBSCRIBERS WHERE TIME = ('{time}');")
         rows = cur.fetchall()
         con.commit()
         cur.close()

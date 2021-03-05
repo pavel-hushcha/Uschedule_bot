@@ -23,8 +23,7 @@ class Keyboard:
         schedule_keyboard.row("📌 Расписание на сегодняшний день", "📌 Расписание на завтрашний день")
         schedule_keyboard.row("👈 Расписание на текущую неделю", "📆 Расписание на неделю",
                               "👉 Расписание на следующую неделю")
-        schedule_keyboard.row("⏰ Подписаться на ежедневные оповещения о занятиях в 7-00")
-        schedule_keyboard.row("🔕 Отписаться от ежедневных оповещений о занятиях в 7-00")
+        schedule_keyboard.row("⏰ Оформить подписку на ежедневные оповещения о занятиях")
         schedule_keyboard.row("✅ Главное меню")
         warningmsg = "Выберите период:"
         self.bot.send_message(message.from_user.id, warningmsg, reply_markup=schedule_keyboard)
@@ -35,3 +34,9 @@ class Keyboard:
         main_back_keyboard.row("🔀 Назад")
         main_back_keyboard.row("✅ Главное меню")
         self.bot.send_message(message.from_user.id, "Выберите пункт меню:", reply_markup=main_back_keyboard)
+
+    def subscribers_menu(self, message):
+        subscribers_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        subscribers_keyboard.row("⏰ Подписаться на ежедневные оповещения о занятиях")
+        subscribers_keyboard.row("🔕 Отписаться от ежедневных оповещений о занятиях")
+        self.bot.send_message(message.from_user.id, "Выберите пункт меню:", reply_markup=subscribers_keyboard)
