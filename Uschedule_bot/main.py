@@ -326,7 +326,7 @@ def ringers():
 # scheduler of database updating at 14-30 UTC and ringer for subscribers from monday to saturday
 scheduler.add_job(update_base, trigger="cron", day_of_week='mon-sat', hour=14, minute=30)
 # trigger_main = AndTrigger([IntervalTrigger(minutes=1), CronTrigger(day_of_week='mon-sat')])
-# scheduler.add_job(ringers, trigger_main)
+scheduler.add_job(ringers, trigger="interval", minutes=1)
 try:
     scheduler.start()
 except (KeyboardInterrupt, SystemExit):
