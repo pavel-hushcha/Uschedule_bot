@@ -153,8 +153,7 @@ def list_teachers(semestr):
 
 # parsing the date of last changes of schedule
 def pars_changes(semestr):
-    for piece in BeautifulSoup(requests.get(semestr).text, "lxml"). \
-            find("footer").find_all("p"):
-        d_date = str(re.findall(r"Последние изменения вносились:\s(.*)", piece.text))[2:-4]
-        if d_date:
-            return datetime.strptime(d_date, "%d.%m.%Y %H:%M")
+    d_date = BeautifulSoup(requests.get(semestr).text, "lxml").find("footer").find("p")
+    cl_date = str(re.findall(r"Последние изменения вносились:\s(.*)", d_date.text))[2:-4]
+    if cl_date:
+        return datetime.strptime(cl_date, "%d.%m.%Y %H:%M")
