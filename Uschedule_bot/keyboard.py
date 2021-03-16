@@ -31,14 +31,12 @@ class Keyboard:
     # create the menu with main menu and back buttons
     def main_back_menu(self, message):
         main_back_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        main_back_keyboard.row("🔀 Назад")
-        main_back_keyboard.row("✅ Главное меню")
+        main_back_keyboard.row("🔀 Назад", "✅ Главное меню")
         self.bot.send_message(message.from_user.id, "Выберите пункт меню:", reply_markup=main_back_keyboard)
 
     def subscribers_menu(self, message):
         subscribers_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         subscribers_keyboard.row("⏰ Подписаться на ежедневные оповещения о занятиях")
         subscribers_keyboard.row("🔕 Отписаться от ежедневных оповещений о занятиях")
-        subscribers_keyboard.row("🔀 Назад")
-        subscribers_keyboard.row("✅ Главное меню")
+        subscribers_keyboard.row("🔀 Назад", "✅ Главное меню")
         self.bot.send_message(message.from_user.id, "Выберите пункт меню:", reply_markup=subscribers_keyboard)

@@ -144,8 +144,7 @@ def handle_text(message):
     if message.text == "📌 Расписание на сегодняшний день":
         today_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         now_day = datetime.datetime.now(tz=tz)
-        today_keyboard.row("🔀 Назад")
-        today_keyboard.row("✅ Главное меню")
+        today_keyboard.row("🔀 Назад", "✅ Главное меню")
         lessons = display.check_return_lessons(name, semestr, now)
         today_display = display.display_schedule(name, now, lessons)
         if today_display:
@@ -158,8 +157,7 @@ def handle_text(message):
         tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
         tomorrow_day = datetime.datetime.now(tz=tz) + datetime.timedelta(days=1)
         tomorrow_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        tomorrow_keyboard.row("🔀 Назад")
-        tomorrow_keyboard.row("✅ Главное меню")
+        tomorrow_keyboard.row("🔀 Назад", "✅ Главное меню")
         lessons = display.check_return_lessons(name, semestr, tomorrow)
         tomorrow_display = display.display_schedule(name, tomorrow, lessons)
         if tomorrow_display:
@@ -171,8 +169,7 @@ def handle_text(message):
 
     if message.text == "👈 Расписание на текущую неделю":
         current_week_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        current_week_keyboard.row("🔀 Назад")
-        current_week_keyboard.row("✅ Главное меню")
+        current_week_keyboard.row("🔀 Назад", "✅ Главное меню")
         lessons = display.check_return_lessons(name, semestr, None)
         today = datetime.datetime.now(tz=tz)
         monday = today + datetime.timedelta(days=-today.weekday())
@@ -196,8 +193,7 @@ def handle_text(message):
 
     if message.text == "👉 Расписание на следующую неделю":
         next_week_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        next_week_keyboard.row("🔀 Назад")
-        next_week_keyboard.row("✅ Главное меню")
+        next_week_keyboard.row("🔀 Назад", "✅ Главное меню")
         lessons = display.check_return_lessons(name, semestr, None)
         today = datetime.datetime.now(tz=tz)
         next_monday = today + datetime.timedelta(days=-today.weekday(), weeks=1)
@@ -233,8 +229,7 @@ def handle_text(message):
 
 def set_subscriber(message):
     set_subscriber_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    set_subscriber_keyboard.row("🔀 Назад")
-    set_subscriber_keyboard.row("✅ Главное меню")
+    set_subscriber_keyboard.row("🔀 Назад", "✅ Главное меню")
     time = message.text
     if time.split(":")[0].isdigit() and time.split(":")[1].isdigit() and 0 <= int(time.split(":")[0]) < 24 \
             and 0 <= int(time.split(":")[1]) < 60 and len(time.split(":")[0]) == 2 and len(time.split(":")[1]) == 2:
@@ -263,8 +258,7 @@ def handle_query(call):
         name = sql.verification(str(call.message.chat.id))
         lessons = display.check_return_lessons(name, semestr, None)
         back_keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        back_keyboard.row("🔀 Назад")
-        back_keyboard.row("✅ Главное меню")
+        back_keyboard.row("🔀 Назад", "✅ Главное меню")
         days = {0: "Понедельник", 1: "Вторник", 2: "Среда", 3: "Четверг", 4: "Пятница", 5: "Суббота"}
         monday = datetime.datetime.strptime(call.data, "%d-%m-%Y")
         for day_schedule in range(6):
@@ -305,7 +299,7 @@ def update_base():
                 sql.insert_lessons_teacher(schedule, d_ch)
 
 
-# everyday at 4-00 UTC sending for subscribers lessons for today
+# everyday sending messages for lessons subscribers
 def ringers():
     tz = pytz.timezone("Europe/Minsk")
     time = datetime.datetime.now(tz=tz).time().strftime("%H:%M")
