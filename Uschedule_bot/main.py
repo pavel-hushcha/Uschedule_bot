@@ -306,9 +306,8 @@ def ringers():
     subscribers = sql.ringer_information(time)
     if subscribers:
         for subscriber in subscribers:
-            today = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
-            tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
             if int(time[:2]) > 10:
+                tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
                 lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, tomorrow)
                 message = display.display_schedule(subscribers.get(subscriber), tomorrow, lessons)
                 if message:
@@ -318,6 +317,7 @@ def ringers():
                 else:
                     bot.send_message(subscriber, "Доброго времени суток! Завтра занятий нет.")
             else:
+                today = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
                 lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, today)
                 message = display.display_schedule(subscribers.get(subscriber), today, lessons)
                 if message:
