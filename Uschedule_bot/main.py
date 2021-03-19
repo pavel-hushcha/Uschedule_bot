@@ -307,13 +307,24 @@ def ringers():
     if subscribers:
         for subscriber in subscribers:
             today = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
-            lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, today)
-            message = display.display_schedule(subscribers.get(subscriber), today, lessons)
-            if message:
-                bot.send_message(subscriber, "Доброго времени суток! Сегодня запланированы следующие занятия:" + "\n"
-                                 + message, parse_mode="Markdown")
+            tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
+            if int(time[:2]) > 10:
+                lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, tomorrow)
+                message = display.display_schedule(subscribers.get(subscriber), tomorrow, lessons)
+                if message:
+                    bot.send_message(subscriber,
+                                     "Доброго времени суток! Завтра запланированы следующие занятия:" + "\n"
+                                     + message, parse_mode="Markdown")
+                else:
+                    bot.send_message(subscriber, "Доброго времени суток! Завтра занятий нет.")
             else:
-                bot.send_message(subscriber, "Доброго времени суток! Сегодня занятий нет.")
+                lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, today)
+                message = display.display_schedule(subscribers.get(subscriber), today, lessons)
+                if message:
+                    bot.send_message(subscriber, "Доброго времени суток! Сегодня запланированы следующие занятия:" + "\n"
+                                     + message, parse_mode="Markdown")
+                else:
+                    bot.send_message(subscriber, "Доброго времени суток! Сегодня занятий нет.")
 
 
 # scheduler of database updating at 14-30 UTC and ringer for subscribers from monday to saturday
