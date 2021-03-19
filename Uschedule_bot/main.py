@@ -217,7 +217,8 @@ def handle_text(message):
 
     if message.text == "⏰ Подписаться на ежедневные оповещения о занятиях":
         subscriber_message = "Введите, пожалуйста, время оповещения в формате \"14:56\" (без кавычек), где 14 - часы," \
-                             " 56 - минуты:"
+                             " 56 - минуты (если время позже 10:00 - оповещения будут о расписании на " \
+                             "завтрашний день):"
         msgname = bot.send_message(message.chat.id, subscriber_message)
         bot.register_next_step_handler(msgname, set_subscriber)
 
