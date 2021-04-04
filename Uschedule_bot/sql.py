@@ -225,3 +225,16 @@ class Sql:
         for row in rows:
             ringer_list[row[0]] = row[1]
         return ringer_list
+
+    def user_quantity(self):
+        user_list = {}
+        con = psycopg2.connect(self.url)
+        cur = con.cursor()
+        cur.execute(f"SELECT USER_ID, NAME_GROUP FROM USER_POSITION;")
+        rows = cur.fetchall()
+        con.commit()
+        cur.close()
+        con.close()
+        for row in rows:
+            user_list[row[0]] = row[1]
+        return len(user_list)

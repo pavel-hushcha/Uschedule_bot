@@ -5,6 +5,7 @@ import os
 import re
 import datetime
 import pytz
+from telebot.apihelper import ApiTelegramException
 import sql
 import parsing
 import keyboard
@@ -217,7 +218,7 @@ def handle_text(message):
 
     if message.text == "⏰ Подписаться на ежедневные оповещения о занятиях":
         subscriber_message = "Введите, пожалуйста, время оповещения в формате \"14:56\" (без кавычек), где 14 - часы," \
-                             " 56 - минуты (если время позже 10:00 - оповещения будут о расписании на " \
+                             " 56 - минуты (если время позже 10:59 - оповещения будут о расписании на " \
                              "завтрашний день):"
         msgname = bot.send_message(message.chat.id, subscriber_message)
         bot.register_next_step_handler(msgname, set_subscriber)
@@ -307,29 +308,32 @@ def ringers():
     subscribers = sql.ringer_information(time)
     if subscribers:
         for subscriber in subscribers:
-            if int(time[:2]) > 10:
-                tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
-                lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, tomorrow)
-                message = display.display_schedule(subscribers.get(subscriber), tomorrow, lessons)
-                if message:
-                    bot.send_message(subscriber,
-                                     "Доброго времени суток! Завтра запланированы следующие занятия:" + "\n"
-                                     + message, parse_mode="Markdown")
-                elif datetime.datetime.now(tz=tz).weekday() != 5:
-                    bot.send_message(subscriber, "Доброго времени суток! Завтра занятий нет.")
-            else:
-                today = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
-                lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, today)
-                message = display.display_schedule(subscribers.get(subscriber), today, lessons)
-                if message:
-                    bot.send_message(subscriber, "Доброго времени суток! Сегодня запланированы следующие занятия:" + "\n"
-                                     + message, parse_mode="Markdown")
-                elif datetime.datetime.now(tz=tz).weekday() != 6:
-                    bot.send_message(subscriber, "Доброго времени суток! Сегодня занятий нет.")
+            try:
+                if int(time[:2]) > 10:
+                    tomorrow = (datetime.datetime.now(tz=tz).date() + datetime.timedelta(days=1)).strftime("%d-%m-%Y")
+                    lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, tomorrow)
+                    message = display.display_schedule(subscribers.get(subscriber), tomorrow, lessons)
+                    if message:
+                        bot.send_message(subscriber,
+                                         "Доброго времени суток! Завтра запланированы следующие занятия:" + "\n"
+                                         + message, parse_mode="Markdown")
+                    elif datetime.datetime.now(tz=tz).weekday() != 5:
+                        bot.send_message(subscriber, "Доброго времени суток! Завтра занятий нет.")
+                else:
+                    today = datetime.datetime.now(tz=tz).date().strftime("%d-%m-%Y")
+                    lessons = display.check_return_lessons(subscribers.get(subscriber), semestr, today)
+                    message = display.display_schedule(subscribers.get(subscriber), today, lessons)
+                    if message:
+                        bot.send_message(subscriber, "Доброго времени суток! Сегодня запланированы следующие занятия:" + "\n"
+                                         + message, parse_mode="Markdown")
+                    elif datetime.datetime.now(tz=tz).weekday() != 6:
+                        bot.send_message(subscriber, "Доброго времени суток! Сегодня занятий нет.")
+            except ApiTelegramException:
+                print(f"{subscriber} blocked Uschedule_bot!")
 
 
-# scheduler of database updating at 14-30 UTC and ringer for subscribers from monday to saturday
-scheduler.add_job(update_base, trigger='cron', day_of_week='mon-sat', hour=14, minute=30)
+# scheduler of database updating at 14-01 UTC and ringer for subscribers from monday to saturday
+scheduler.add_job(update_base, trigger='cron', day_of_week='mon-sat', hour=14, minute=1)
 scheduler.add_job(ringers, trigger='cron', minute='*', max_instances=5)
 try:
     scheduler.start()
