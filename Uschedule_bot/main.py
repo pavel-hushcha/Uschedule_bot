@@ -240,7 +240,7 @@ def set_subscriber(message):
         subscriber_message = f"Подписка на ежедневные оповещения в {time} о занятиях {name} установлена!"
         bot.send_message(message.chat.id, subscriber_message, reply_markup=set_subscriber_keyboard)
     else:
-        bot.send_message(message.chat.id, "Введите корректное время!")
+        bot.send_message(message.chat.id, "Введите время в требуемом формате!")
         keyboard.subscribers_menu(message)
 
 
@@ -329,7 +329,7 @@ def ringers():
                     elif datetime.datetime.now(tz=tz).weekday() != 6:
                         bot.send_message(subscriber, "Доброго времени суток! Сегодня занятий нет.")
             except ApiTelegramException:
-                print(f"Uschedule_bot was blocked by {subscriber} user_id!")
+                sql.clear_subscriber_position(subscriber)
 
 
 # scheduler of database updating at 14-01 UTC and ringer for subscribers from monday to saturday
