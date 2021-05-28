@@ -21,8 +21,11 @@ sql = sql.Sql(database_url)
 
 # check database tables and returns the dictionary of teacher's lessons
 def check_return_lessons(name, semestr, date):
-    date_changes = parsing.pars_changes(semestr)
     available = requests.get(semestr).status_code
+    if available == 200:
+        date_changes = parsing.pars_changes(semestr)
+    else:
+        date_changes = datetime.datetime.strptime(sql.read_date(name), "%Y-%m-%d %H:%M:%S")
     if not sql.check_table(name):  # check if lessons of teacher do not exist in database
         if re.match(r"\d\d[А-Я]", name) or re.match(r"[А-Я]{2}-\d\d", name):
             parsing_schedule = parsing.make_schedule_for_teacher(name, semestr)
@@ -33,7 +36,7 @@ def check_return_lessons(name, semestr, date):
     # check the date of changes in table
     date_table = datetime.datetime.strptime(sql.read_date(name), "%Y-%m-%d %H:%M:%S")
     if re.match(r"\d\d[А-Я]", name) or re.match(r"[А-Я]{2}-\d\d", name):
-        if date_table == date_changes or available != 200:
+        if date_table == date_changes:
             lessons = sql.read_lessons_group(name, date)
         else:
             sql.delete_table(name)  # upgrade the table if date is over
@@ -41,7 +44,7 @@ def check_return_lessons(name, semestr, date):
             sql.insert_lessons_group(parsing_schedule, date_changes)
             lessons = sql.read_lessons_group(name, date)
     else:
-        if date_table == date_changes or available != 200:
+        if date_table == date_changes:
             lessons = sql.read_lessons_teacher(name, date)
         else:
             sql.delete_table(name)
