@@ -329,7 +329,7 @@ def ringers():
                     elif datetime.datetime.now(tz=tz).weekday() != 6:
                         bot.send_message(subscriber, "Доброго времени суток! Сегодня занятий нет.")
             except ApiTelegramException:
-                sql.clear_subscriber_position(subscriber)
+                print(f"Bot was blocked by {subscriber}")
 
 
 # scheduler of database updating at 14-01 UTC and ringer for subscribers from monday to saturday
