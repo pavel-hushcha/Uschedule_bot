@@ -4,6 +4,7 @@ import requests
 import sql
 import datetime
 import parsing
+import parsing_add
 import re
 import os
 
@@ -29,9 +30,15 @@ def check_return_lessons(name, semestr, date):
     if not sql.check_table(name):  # check if lessons of teacher do not exist in database
         if re.match(r"\d\d[А-Я]", name) or re.match(r"[А-Я]{2}-\d\d", name):
             parsing_schedule = parsing.make_schedule_for_teacher(name, semestr)
+            schedule_b = parsing_add.make_schedule_for_teacher(name, semestr)
+            if schedule_b:
+                parsing_schedule[name].update(schedule_b.get(name, {}))
             sql.insert_lessons_group(parsing_schedule, date_changes)  # create the table with lessons
         else:
             parsing_schedule = parsing.make_schedule_for_teacher(name, semestr)
+            schedule_b = parsing_add.make_schedule_for_teacher(name, semestr)
+            if schedule_b:
+                parsing_schedule[name].update(schedule_b.get(name, {}))
             sql.insert_lessons_teacher(parsing_schedule, date_changes)
     # check the date of changes in table
     date_table = datetime.datetime.strptime(sql.read_date(name), "%Y-%m-%d %H:%M:%S")
@@ -41,6 +48,9 @@ def check_return_lessons(name, semestr, date):
         else:
             sql.delete_table(name)  # upgrade the table if date is over
             parsing_schedule = parsing.make_schedule_for_teacher(name, semestr)
+            schedule_b = parsing_add.make_schedule_for_teacher(name, semestr)
+            if schedule_b:
+                parsing_schedule[name].update(schedule_b.get(name, {}))
             sql.insert_lessons_group(parsing_schedule, date_changes)
             lessons = sql.read_lessons_group(name, date)
     else:
@@ -49,6 +59,9 @@ def check_return_lessons(name, semestr, date):
         else:
             sql.delete_table(name)
             parsing_schedule = parsing.make_schedule_for_teacher(name, semestr)
+            schedule_b = parsing_add.make_schedule_for_teacher(name, semestr)
+            if schedule_b:
+                parsing_schedule[name].update(schedule_b.get(name, {}))
             sql.insert_lessons_teacher(parsing_schedule, date_changes)
             lessons = sql.read_lessons_teacher(name, date)
     return lessons

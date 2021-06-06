@@ -8,6 +8,7 @@ import pytz
 from telebot.apihelper import ApiTelegramException
 import sql
 import parsing
+import parsing_add
 import keyboard
 import display
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -110,7 +111,7 @@ def save_name_group(message):
                                           " Попробуйте воспользоваться поиском.")
         keyboard.main_menu(message)
     else:
-        if not parsing.list_weeks(name_group, semestr):
+        if not parsing.list_weeks(name_group, semestr) and not parsing_add.list_weeks(name_group, semestr):
             bot.send_message(message.chat.id, "Занятия отсутствуют.")
             sql.clear_getting_position(str(message.chat.id))
             keyboard.main_menu(message)
@@ -185,7 +186,7 @@ def handle_text(message):
 
     if message.text == "📆 Расписание на неделю":
         week_markup = telebot.types.InlineKeyboardMarkup()
-        weeks = parsing.list_weeks(name, semestr)
+        weeks = parsing.list_weeks(name, semestr) + parsing_add.list_weeks(name, semestr)
         for day in weeks:
             week_markup.add(telebot.types.InlineKeyboardButton(text=day[0:6] + now[-2:] + day[6:] + now[-2:],
                                                                callback_data=day[0:2] + "-" + day[3:5] + "-"
@@ -250,7 +251,8 @@ def set_subscriber(message):
 def handle_query(call):
     if call.data.isdigit():
         list_teachers = parsing.list_all(semestr)
-        if not parsing.list_weeks(list_teachers[int(call.data)], semestr):
+        if not parsing.list_weeks(list_teachers[int(call.data)], semestr) and not \
+                parsing_add.list_weeks(list_teachers[int(call.data)], semestr):
             bot.send_message(call.message.chat.id, "Занятия отсутствуют.")
             keyboard.main_menu(call)
         else:
@@ -279,7 +281,8 @@ bot.load_next_step_handlers()
 # everyday updating the database
 def update_base():
     for item in parsing.list_all(semestr):
-        if parsing.list_weeks(item, semestr):
+        weeks = parsing.list_weeks(item, semestr) + parsing_add.list_weeks(item, semestr)
+        if weeks:
             if sql.check_table(item):
                 d_ch = parsing.pars_changes(semestr)
                 date_table = datetime.datetime.strptime(sql.read_date(item), "%Y-%m-%d %H:%M:%S")
@@ -287,17 +290,29 @@ def update_base():
                     sql.delete_table(item)
                     if re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
                         schedule = parsing.make_schedule_for_teacher(item, semestr)
+                        schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
+                        if schedule_b:
+                            schedule[item].update(schedule_b.get(item, {}))
                         sql.insert_lessons_group(schedule, d_ch)
                     else:
                         schedule = parsing.make_schedule_for_teacher(item, semestr)
+                        schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
+                        if schedule_b:
+                            schedule[item].update(schedule_b.get(item, {}))
                         sql.insert_lessons_teacher(schedule, d_ch)
             elif re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
                 d_ch = parsing.pars_changes(semestr)
                 schedule = parsing.make_schedule_for_teacher(item, semestr)
+                schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
+                if schedule_b:
+                    schedule[item].update(schedule_b.get(item, {}))
                 sql.insert_lessons_group(schedule, d_ch)
             else:
                 d_ch = parsing.pars_changes(semestr)
                 schedule = parsing.make_schedule_for_teacher(item, semestr)
+                schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
+                if schedule_b:
+                    schedule[item].update(schedule_b.get(item, {}))
                 sql.insert_lessons_teacher(schedule, d_ch)
 
 
