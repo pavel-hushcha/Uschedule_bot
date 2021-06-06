@@ -186,7 +186,10 @@ def handle_text(message):
 
     if message.text == "📆 Расписание на неделю":
         week_markup = telebot.types.InlineKeyboardMarkup()
-        weeks = parsing.list_weeks(name, semestr) + parsing_add.list_weeks(name, semestr)
+        if parsing_add.list_weeks(name, semestr):
+            weeks = parsing.list_weeks(name, semestr) + parsing_add.list_weeks(name, semestr)
+        else:
+            weeks = parsing.list_weeks(name, semestr)
         for day in weeks:
             week_markup.add(telebot.types.InlineKeyboardButton(text=day[0:6] + now[-2:] + day[6:] + now[-2:],
                                                                callback_data=day[0:2] + "-" + day[3:5] + "-"
