@@ -284,7 +284,10 @@ bot.load_next_step_handlers()
 # everyday updating the database
 def update_base():
     for item in parsing.list_all(semestr):
-        weeks = parsing.list_weeks(item, semestr) + parsing_add.list_weeks(item, semestr)
+        if parsing_add.list_weeks(item, semestr):
+            weeks = parsing.list_weeks(item, semestr) + parsing_add.list_weeks(item, semestr)
+        else:
+            weeks = parsing.list_weeks(item, semestr)
         if weeks:
             if sql.check_table(item):
                 d_ch = parsing.pars_changes(semestr)
