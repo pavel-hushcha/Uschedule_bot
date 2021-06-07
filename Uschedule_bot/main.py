@@ -296,29 +296,41 @@ def update_base():
                     sql.delete_table(item)
                     if re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
                         schedule = parsing.make_schedule_for_teacher(item, semestr)
-                        schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
-                        if schedule_b:
-                            schedule[item].update(schedule_b.get(item, {}))
+                        try:
+                            schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
+                            if schedule_b:
+                                schedule[item].update(schedule_b.get(item, {}))
+                        except Exception as e:
+                            print(e)
                         sql.insert_lessons_group(schedule, d_ch)
                     else:
                         schedule = parsing.make_schedule_for_teacher(item, semestr)
-                        schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
-                        if schedule_b:
-                            schedule[item].update(schedule_b.get(item, {}))
+                        try:
+                            schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
+                            if schedule_b:
+                                schedule[item].update(schedule_b.get(item, {}))
+                        except Exception as e:
+                            print(e)
                         sql.insert_lessons_teacher(schedule, d_ch)
             elif re.match(r"\d\d[А-Я]", item) or re.match(r"[А-Я]{2}-\d\d", item):
                 d_ch = parsing.pars_changes(semestr)
                 schedule = parsing.make_schedule_for_teacher(item, semestr)
-                schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
-                if schedule_b:
-                    schedule[item].update(schedule_b.get(item, {}))
+                try:
+                    schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
+                    if schedule_b:
+                        schedule[item].update(schedule_b.get(item, {}))
+                except Exception as e:
+                    print(e)
                 sql.insert_lessons_group(schedule, d_ch)
             else:
                 d_ch = parsing.pars_changes(semestr)
                 schedule = parsing.make_schedule_for_teacher(item, semestr)
-                schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
-                if schedule_b:
-                    schedule[item].update(schedule_b.get(item, {}))
+                try:
+                    schedule_b = parsing_add.make_schedule_for_teacher(item, semestr)
+                    if schedule_b:
+                        schedule[item].update(schedule_b.get(item, {}))
+                except Exception as e:
+                    print(e)
                 sql.insert_lessons_teacher(schedule, d_ch)
 
 
