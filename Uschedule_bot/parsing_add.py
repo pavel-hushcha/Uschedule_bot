@@ -45,7 +45,7 @@ def make_schedule_for_teacher(teacher, semestr):
                 lesson[1] = re.sub(r"\(([^а-яА-Я]*)\)\s", "", lesson[1])
                 if lesson[1] != " ":
                     #  set the date of day
-                    date = datetime.strptime(weeks.get(part)[:6], "%d.%m.") + timedelta(days=d_of_week.get(day))
+                    date = datetime.strptime((weeks.get(part)[:6]).rstrip(), "%d.%m.") + timedelta(days=d_of_week.get(day))
                     cur_date = datetime.strftime(date, "%d-%m-") + str(year)
                     days.setdefault(cur_date, [])
                     days[cur_date].append(lesson)  # add lessons to dictionary by dates
