@@ -34,7 +34,7 @@ def check_return_lessons(name, semestr, date):
                 schedule_b = parsing_add.make_schedule_for_teacher(name, semestr)
                 if schedule_b:
                     parsing_schedule[name].update(schedule_b.get(name, {}))
-            except AttributeError:
+            except Exception:
                 pass
             sql.insert_lessons_group(parsing_schedule, date_changes)  # create the table with lessons
         else:
@@ -43,7 +43,7 @@ def check_return_lessons(name, semestr, date):
                 schedule_b = parsing_add.make_schedule_for_teacher(name, semestr)
                 if schedule_b:
                     parsing_schedule[name].update(schedule_b.get(name, {}))
-            except AttributeError:
+            except Exception:
                 pass
             sql.insert_lessons_teacher(parsing_schedule, date_changes)
     # check the date of changes in table
@@ -58,7 +58,7 @@ def check_return_lessons(name, semestr, date):
                 schedule_b = parsing_add.make_schedule_for_teacher(name, semestr)
                 if schedule_b:
                     parsing_schedule[name].update(schedule_b.get(name, {}))
-            except AttributeError:
+            except Exception:
                 pass
             sql.insert_lessons_group(parsing_schedule, date_changes)
             lessons = sql.read_lessons_group(name, date)
@@ -72,7 +72,7 @@ def check_return_lessons(name, semestr, date):
                 schedule_b = parsing_add.make_schedule_for_teacher(name, semestr)
                 if schedule_b:
                     parsing_schedule[name].update(schedule_b.get(name, {}))
-            except AttributeError:
+            except Exception:
                 pass
             sql.insert_lessons_teacher(parsing_schedule, date_changes)
             lessons = sql.read_lessons_teacher(name, date)
